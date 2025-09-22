@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.repository
 
 
-import com.crafto.crafto_backend.entity.Governorate
+import com.crafto.crafto_backend.entity.Governorates
 import org.springframework.data.mongodb.repository.MongoRepository
 
-interface GovernorateRepository : MongoRepository<Governorate, String>
+interface GovernorateRepository : MongoRepository<Governorates, String>

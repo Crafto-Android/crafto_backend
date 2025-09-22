@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 
 @Document("governorates")
-data class Governorate(
+data class Governorates(
     @Id
     val id: String? = null,
     val name: String
