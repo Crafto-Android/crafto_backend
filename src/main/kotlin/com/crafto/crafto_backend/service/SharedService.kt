@@ -1,12 +1,12 @@
 package com.crafto.crafto_backend.service
 
 import com.crafto.crafto_backend.mapper.toCategoryResponse
-import com.crafto.crafto_backend.repository.CraftoRepository
-import com.crafto.crafto_backend.response.CategoryResponse
+import com.crafto.crafto_backend.repository.CategoryRepository
+import com.crafto.crafto_backend.dto.CategoryResponse
 import org.springframework.stereotype.Service
 
 @Service
-class CraftoService (private val repository: CraftoRepository){
+class SharedService (private val repository: CategoryRepository){
 
     fun getAllCategories():List<CategoryResponse>{
         return repository.findAll().map { it.toCategoryResponse() }

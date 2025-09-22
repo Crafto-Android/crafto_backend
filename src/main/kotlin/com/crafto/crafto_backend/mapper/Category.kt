@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.mapper
 
 import com.crafto.crafto_backend.entity.Category
-import com.crafto.crafto_backend.response.CategoryResponse
+import com.crafto.crafto_backend.dto.CategoryResponse
 
 fun Category.toCategoryResponse(): CategoryResponse {
     return CategoryResponse(
