@@ -10,5 +10,4 @@ data class District(
     @Id
     val id: String? = null,
     val name: String,
-    val governorateId: String
 )

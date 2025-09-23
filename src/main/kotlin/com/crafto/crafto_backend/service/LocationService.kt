@@ -19,6 +19,12 @@ class LocationService(
     }
 
     fun getDistrictByGovernorate(governorateId: String): List<DistrictResponse> {
-        return districtRepository.findByGovernorateId(governorateId).map { it.toAreaResponse() }
+        val optionalGov = governorateRepository.findById(governorateId)
+        if (optionalGov.isEmpty) {
+            return emptyList()
+        }
+        val gov = optionalGov.get()
+        val districts = districtRepository.findAllById(gov.districts)
+        return districts.map { it.toAreaResponse() }
     }
 }

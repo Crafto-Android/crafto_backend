@@ -8,5 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class Governorates(
     @Id
     val id: String? = null,
-    val name: String
+    val name: String,
+    val districts: List<String>
 )
