@@ -18,7 +18,7 @@ class LocationController(private val service: LocationService) {
         return service.getAllGovernorates()
     }
 
-    @GetMapping("/areas/{governorateId}")
+    @GetMapping("/district/{governorateId}")
     fun getDistrictByGovernorate(@PathVariable governorateId: String): List<DistrictResponse> {
         return service.getDistrictByGovernorate(governorateId)
     }
