@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/authentication")
+@RequestMapping("/authorization")
 class AuthorizationController(private val authenticationService: AuthenticationService) {
 
     @PostMapping
