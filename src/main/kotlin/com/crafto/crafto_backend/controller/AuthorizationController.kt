@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.dto.AuthenticationRequest
-import com.crafto.crafto_backend.dto.AuthenticationResponse
+import com.crafto.crafto_backend.dto.AuthorizationRequest
+import com.crafto.crafto_backend.dto.AuthorizationResponse
 import com.crafto.crafto_backend.service.AuthenticationService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/authentication")
-class AuthenticationController(private val authenticationService: AuthenticationService) {
+class AuthorizationController(private val authenticationService: AuthenticationService) {
 
     @PostMapping
-    fun authenticate(@RequestBody authenticationRequest: AuthenticationRequest): AuthenticationResponse {
-        return authenticationService.save(authenticationRequest)
+    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): AuthorizationResponse {
+        return authenticationService.save(authorizationRequest)
     }
 
     @GetMapping
-    fun findByUserId(@RequestParam userId: String): AuthenticationResponse? {
+    fun findByUserId(@RequestParam userId: String): AuthorizationResponse? {
       return  authenticationService.findByUserId(userId)
     }
 

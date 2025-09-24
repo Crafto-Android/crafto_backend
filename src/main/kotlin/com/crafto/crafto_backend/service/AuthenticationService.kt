@@ -1,23 +1,23 @@
 package com.crafto.crafto_backend.service
 
-import com.crafto.crafto_backend.dto.AuthenticationRequest
-import com.crafto.crafto_backend.dto.AuthenticationResponse
-import com.crafto.crafto_backend.mapper.toAuthenticationEntity
-import com.crafto.crafto_backend.mapper.toAuthenticationResponse
-import com.crafto.crafto_backend.repository.AuthenticationRepository
+import com.crafto.crafto_backend.dto.AuthorizationRequest
+import com.crafto.crafto_backend.dto.AuthorizationResponse
+import com.crafto.crafto_backend.mapper.toAuthorizationEntity
+import com.crafto.crafto_backend.mapper.toAuthorizationResponse
+import com.crafto.crafto_backend.repository.AuthorizationRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
 @Service
-class AuthenticationService(private val authenticationRepository: AuthenticationRepository) {
+class AuthenticationService(private val authorizationRepository: AuthorizationRepository) {
 
-    fun findByUserId(userId: String): AuthenticationResponse? {
-        val response = authenticationRepository.findById(ObjectId(userId)).orElse(null)
-        return response.toAuthenticationResponse()
+    fun findByUserId(userId: String): AuthorizationResponse? {
+        val response = authorizationRepository.findById(ObjectId(userId)).orElse(null)
+        return response.toAuthorizationResponse()
     }
 
-    fun save(body: AuthenticationRequest): AuthenticationResponse {
-        val userAuth = authenticationRepository.save(body.toAuthenticationEntity())
-        return userAuth.toAuthenticationResponse()
+    fun save(body: AuthorizationRequest): AuthorizationResponse {
+        val userAuth = authorizationRepository.save(body.toAuthorizationEntity())
+        return userAuth.toAuthorizationResponse()
     }
 }
