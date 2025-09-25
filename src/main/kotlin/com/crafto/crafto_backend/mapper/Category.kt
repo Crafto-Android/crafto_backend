@@ -5,6 +5,7 @@ import com.crafto.crafto_backend.dto.CategoryResponse
 
 fun Category.toCategoryResponse(): CategoryResponse {
     return CategoryResponse(
+        categoryId=id,
         categoryColor = categoryColor,
         categoryName = categoryName,
     )
