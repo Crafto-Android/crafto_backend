@@ -1,6 +1,5 @@
 package com.crafto.crafto_backend.controller
 
-
 import com.crafto.crafto_backend.dto.DistrictResponse
 import com.crafto.crafto_backend.dto.GovernorateResponse
 import com.crafto.crafto_backend.service.LocationService

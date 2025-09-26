@@ -6,6 +6,7 @@ import com.crafto.crafto_backend.dto.GovernorateResponse
 fun Governorates.toGovernorateResponse(): GovernorateResponse {
     return GovernorateResponse(
         id = id ?: "",
-        name = name
+        name = name,
+        districts = districts
     )
 }
