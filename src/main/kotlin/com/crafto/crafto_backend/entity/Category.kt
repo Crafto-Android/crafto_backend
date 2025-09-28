@@ -7,5 +7,7 @@ data class Category(
     @Id
     val id: String,
     val categoryName:String,
-    val categoryColor:String
+    val categoryColor:String,
+    val categoryIconUrl:String,
+    val categoryDescription:String
 )
