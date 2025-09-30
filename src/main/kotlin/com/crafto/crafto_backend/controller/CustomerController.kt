@@ -1,18 +1,51 @@
 package com.crafto.crafto_backend.controller
 
+import com.crafto.crafto_backend.request.CustomerIssueRequest
 import com.crafto.crafto_backend.request.CustomerRequest
+import com.crafto.crafto_backend.response.CustomerIssueResponse
 import com.crafto.crafto_backend.service.CustomerService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 
 // POST  http://localhost:8085/customer
+// POST  http://localhost:8085/customer/issue
 
 @RestController
 @RequestMapping("/customer")
 class CustomerController(private val customerService: CustomerService) {
 
     @PostMapping
-    fun getCustomerById(@RequestBody body: CustomerRequest) = customerService.saveCustomer(body = body)
+    fun saveCustomer(@RequestBody body: CustomerRequest) = customerService.saveCustomer(body = body)
+
+    @PostMapping("/issue", consumes = ["multipart/form-data"])
+    fun saveCustomerIssue(
+        @RequestParam customerId: String,
+        @RequestParam issueTitle: String,
+        @RequestParam issueContent: String,
+        @RequestParam categoryId: String,
+        @RequestParam governmentId: String,
+        @RequestParam governmentName: String,
+        @RequestParam districtId: String,
+        @RequestParam districtName: String,
+        @RequestParam locationDetails: String,
+        @RequestParam photos: List<MultipartFile>
+    ) : CustomerIssueResponse {
+        val body = CustomerIssueRequest(
+            customerId = customerId,
+            issueTitle = issueTitle,
+            issueContent = issueContent,
+            categoryId = categoryId,
+            governmentId = governmentId,
+            governmentName = governmentName,
+            districtId = districtId,
+            districtName = districtName,
+            locationDetails = locationDetails
+        )
+        val response = customerService.saveCustomerIssue(body = body, photos)
+        return response
+    }
 }
