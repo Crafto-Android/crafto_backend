@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.net.URL
+import java.net.URI
 import java.net.URLDecoder
 import java.util.UUID
 
@@ -35,14 +35,6 @@ class FirebaseStorageService(
             val blobInfo = BlobInfo.newBuilder(blobId)
                 .setContentType(file.contentType ?: "application/octet-stream")
                 .build()
-
-            // Upload the file
-            //val blob = firebaseBucket.storage.create(blobInfo, file.bytes)
-
-            // Generate a signed URL (temporary link valid for 7 days)
-            //val url = blob.signUrl(7, TimeUnit.DAYS).toString()
-            //return url
-
 
             // Upload the file
             val blob = firebaseBucket.storage.create(blobInfo, file.bytes)
@@ -129,18 +121,31 @@ class FirebaseStorageService(
             when {
                 // Handle standard Google Storage URLs
                 fileUrl.contains("storage.googleapis.com") -> {
-                    val url = URL(fileUrl)
-                    val path = url.path
+                    val uri = URI(fileUrl)
+                    val path = uri.path ?: return null
+
+                    // Ensure bucket name is in the path
+                    if (!path.contains(firebaseBucket.name)) {
+                        println("URL doesn't match expected bucket: $fileUrl")
+                        return null
+                    }
+
                     // Remove bucket name from path
                     path.substringAfter("/${firebaseBucket.name}/")
                 }
 
                 // Handle Firebase Storage URLs
                 fileUrl.contains("firebasestorage.googleapis.com") -> {
-                    val url = URL(fileUrl)
-                    val path = url.path
+                    val uri = URI(fileUrl)
+                    val path = uri.path ?: return null
+
                     // Extract the encoded file path after /o/
-                    val encodedPath = path.substringAfter("/o/").substringBefore("?")
+                    if (!path.contains("/o/")) {
+                        println("Invalid Firebase Storage URL format: $fileUrl")
+                        return null
+                    }
+                    // Extract the encoded file path after /o/
+                    val encodedPath = path.substringAfter("/o/")
                     // Decode the URL encoding
                     URLDecoder.decode(encodedPath, "UTF-8")
                 }
