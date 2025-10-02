@@ -12,7 +12,7 @@ import org.springframework.core.io.ClassPathResource
 import javax.annotation.PostConstruct
 
 @Configuration
-class FirebaseConfig {
+class FirebaseConfiguration {
 
     @Value("\${firebase.storage.bucket}")
     private lateinit var storageBucket: String
