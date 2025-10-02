@@ -1,8 +1,12 @@
 package com.crafto.crafto_backend.service
 
+import com.google.cloud.storage.Acl
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Bucket
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.net.URL
@@ -14,6 +18,8 @@ import java.util.concurrent.TimeUnit
 class FirebaseStorageService(
     private val firebaseBucket: Bucket
 ) {
+
+    private val deleteScope = CoroutineScope(Dispatchers.IO)
 
     fun uploadFile(
         file: MultipartFile,
@@ -32,13 +38,21 @@ class FirebaseStorageService(
                 .build()
 
             // Upload the file
-            val blob = firebaseBucket.storage.create(blobInfo, file.bytes)
+            //val blob = firebaseBucket.storage.create(blobInfo, file.bytes)
 
             // Generate a signed URL (temporary link valid for 7 days)
-            val url = blob.signUrl(7, TimeUnit.DAYS).toString()
+            //val url = blob.signUrl(7, TimeUnit.DAYS).toString()
+            //return url
 
-            println("File uploaded successfully: $fullPath")
-            return url
+
+            // Upload the file
+            val blob = firebaseBucket.storage.create(blobInfo, file.bytes)
+
+            // Make the file publicly readable
+            blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER))
+
+            // Now this URL will work
+            return "https://storage.googleapis.com/${firebaseBucket.name}/$fullPath"
 
         } catch (e: Exception) {
             println("Error uploading file: ${e.message}")
@@ -70,6 +84,39 @@ class FirebaseStorageService(
         } catch (e: Exception) {
             println("Error deleting file by URL: ${e.message}")
             false
+        }
+    }
+
+    fun deleteFileByUrlAsync(fileUrl: String) {
+        deleteScope.launch {
+            try {
+                deleteFileByUrl(fileUrl)
+            } catch (e: Exception) {
+                println("Async deletion failed: ${e.message}")
+            }
+        }
+    }
+
+    fun deleteMultipleFilesByUrls(fileUrls: List<String>): Int {
+        var deletedCount = 0
+        fileUrls.forEach { url ->
+            if (deleteFileByUrl(url)) {
+                deletedCount++
+            }
+        }
+        println("Deleted $deletedCount out of ${fileUrls.size} files")
+        return deletedCount
+    }
+
+    fun deleteMultipleFilesByUrlsAsync(fileUrls: List<String>) {
+        deleteScope.launch {
+            fileUrls.forEach { url ->
+                try {
+                    deleteFileByUrl(url)
+                } catch (e: Exception) {
+                    println("Failed to delete: $url")
+                }
+            }
         }
     }
 
@@ -108,16 +155,5 @@ class FirebaseStorageService(
             println("Error extracting file path from URL: ${e.message}")
             null
         }
-    }
-
-    fun deleteMultipleFilesByUrls(fileUrls: List<String>): Int {
-        var deletedCount = 0
-        fileUrls.forEach { url ->
-            if (deleteFileByUrl(url)) {
-                deletedCount++
-            }
-        }
-        println("Deleted $deletedCount out of ${fileUrls.size} files")
-        return deletedCount
     }
 }

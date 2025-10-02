@@ -78,7 +78,7 @@ class CraftsmanService(
 
             // Only delete old files after successful upload
             listOfNotNull(oldIdFront, oldIdBack).forEach { url ->
-                firebaseStorageService.deleteFileByUrl(url)
+                firebaseStorageService.deleteFileByUrlAsync(url)
             }
 
             // Update database
@@ -120,7 +120,7 @@ class CraftsmanService(
         // Delete old work images
         if (craftsman.verification.workVerificationImages.isNotEmpty()) {
             println("Deleting ${craftsman.verification.workVerificationImages.size} old work images")
-            firebaseStorageService.deleteMultipleFilesByUrls(craftsman.verification.workVerificationImages)
+            firebaseStorageService.deleteMultipleFilesByUrlsAsync(craftsman.verification.workVerificationImages)
         }
 
         // Upload new work images
