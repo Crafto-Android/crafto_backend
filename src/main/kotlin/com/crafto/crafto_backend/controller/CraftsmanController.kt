@@ -4,9 +4,7 @@ import com.crafto.crafto_backend.dto.CraftsmanProfileResponse
 import com.crafto.crafto_backend.dto.CraftsmanSetupRequest
 import com.crafto.crafto_backend.dto.CraftsmanSetupResponse
 import com.crafto.crafto_backend.dto.CraftsmanStatusResponse
-import com.crafto.crafto_backend.dto.CraftsmanUploadedFilesRequest
 import com.crafto.crafto_backend.dto.IdCardUploadResponse
-import com.crafto.crafto_backend.dto.VerificationUploadResponse
 import com.crafto.crafto_backend.dto.WorkPortfolioUploadResponse
 import com.crafto.crafto_backend.service.CraftsmanService
 import jakarta.validation.Valid
@@ -27,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/upload-documents
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/id-cards
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/work-portfolio
+// POST  http://localhost:8085/craftsman/{craftsmanId}/delete-account
 // GET   http://localhost:8085/craftsman/{craftsmanId}/status
 // GET  http://localhost:8085/craftsman/profile
 // GET http://localhost:8085/craftsman/{craftsmanId}
@@ -116,73 +115,6 @@ class CraftsmanController(
         )
     }
 
-//    @PostMapping("/{craftsmanId}/verify/work-portfolio/add", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-//    fun addToWorkPortfolio(
-//        @PathVariable craftsmanId: String,
-//        @RequestParam("workImages") workImages: List<MultipartFile>,
-//        @RequestHeader("userId") userId: String
-//    ): ResponseEntity<WorkPortfolioUploadResponse> {
-//
-//        val updatedCraftsman = craftsmanService.addToWorkPortfolio(
-//            craftsmanId = craftsmanId,
-//            userId = userId,
-//            newWorkImages = workImages
-//        )
-//
-//        return ResponseEntity.ok(
-//            WorkPortfolioUploadResponse(
-//                craftsmanId = updatedCraftsman.id!!.toHexString(),
-//                workImageUrls = updatedCraftsman.verification.workVerificationImages,
-//                message = "Work images added successfully",
-//                totalImages = updatedCraftsman.verification.workVerificationImages.size
-//            )
-//        )
-//    }
-
-//    @Deprecated("Use separate endpoints for ID and work verification")
-//    @PostMapping("/{craftsmanId}/verify/upload-documents", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-//    fun uploadDocuments(
-//        @PathVariable craftsmanId: String,
-//        @RequestParam("idCardFront") idCardFront: MultipartFile,
-//        @RequestParam("idCardBack") idCardBack: MultipartFile,
-//        @RequestParam("workImages") workImages: List<MultipartFile>,
-//        @RequestHeader("userId") userId: String
-//    ): ResponseEntity<VerificationUploadResponse> {
-//
-//        // Validate at least 1 work image, max 5
-//        if (workImages.isEmpty() || workImages.size > 5) {
-//            return ResponseEntity.badRequest().body(
-//                VerificationUploadResponse(
-//                    craftsmanId = craftsmanId,
-//                    verificationStatus = null,
-//                    message = "Please upload between 1 and 5 work verification images",
-//                    craftsmanUploadedFilesRequest = null
-//                )
-//            )
-//        }
-//
-//        val updatedCraftsman = craftsmanService.uploadVerificationDocuments(
-//            craftsmanId = craftsmanId,
-//            userId = userId,  // For ownership verification
-//            idCardFront = idCardFront,
-//            idCardBack = idCardBack,
-//            workImages = workImages
-//        )
-//
-//        return ResponseEntity.ok(
-//            VerificationUploadResponse(
-//                craftsmanId = updatedCraftsman.id!!.toHexString(),
-//                verificationStatus = updatedCraftsman.verification.verificationStatus,
-//                message = "Documents uploaded successfully. Verification pending.",
-//                craftsmanUploadedFilesRequest = CraftsmanUploadedFilesRequest(
-//                    idCardFrontUrl = updatedCraftsman.verification.idCardFront!!,
-//                    idCardBackUrl = updatedCraftsman.verification.idCardBack!!,
-//                    workImageUrls = updatedCraftsman.verification.workVerificationImages
-//                )
-//            )
-//        )
-//    }
-
     @GetMapping("/{craftsmanId}/status")
     fun getCraftsmanStatus(
         @PathVariable craftsmanId: String
@@ -227,5 +159,19 @@ class CraftsmanController(
                 createdAt = craftsman.createdAt
             )
         )
+    }
+
+    @PostMapping("/{craftsmanId}/delete-account")
+    fun deleteCraftsmanAccount(
+        @PathVariable craftsmanId: String,
+        @RequestHeader("userId") userId: String
+    ): ResponseEntity<Map<String, String>> {
+        val success = craftsmanService.deleteCraftsmanAccount(craftsmanId, userId)
+        return if (success) {
+            ResponseEntity.ok(mapOf("message" to "Craftsman account deleted successfully"))
+        } else {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(mapOf("message" to "Failed to delete craftsman account"))
+        }
     }
 }

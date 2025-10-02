@@ -53,42 +53,57 @@ class CraftsmanService(
         idCardBack: MultipartFile
     ): Craftsman {
         val craftsman = validateCraftsmanOwnership(craftsmanId, userId)
-
-        // Validate ID card files
         validateIdCardFiles(listOf(idCardFront, idCardBack))
 
-        // Delete old ID cards if they exist
-//        craftsman.verification.idCardFront?.let {
-//            deleteFileFromUrl(it)
-//        }
-//        craftsman.verification.idCardBack?.let {
-//            deleteFileFromUrl(it)
-//        }
+        // Store old URLs in case we need to restore
+        val oldIdFront = craftsman.verification.idCardFront
+        val oldIdBack = craftsman.verification.idCardBack
 
-        // Upload new ID cards
-        val idFrontUrl = firebaseStorageService.uploadFile(
-            file = idCardFront,
-            folder = "craftsmen/$craftsmanId/id-cards",
-            fileName = "id-front-${System.currentTimeMillis()}.${getFileExtension(idCardFront)}"
-        )
+        var newIdFrontUrl: String? = null
+        var newIdBackUrl: String? = null
 
-        val idBackUrl = firebaseStorageService.uploadFile(
-            file = idCardBack,
-            folder = "craftsmen/$craftsmanId/id-cards",
-            fileName = "id-back-${System.currentTimeMillis()}.${getFileExtension(idCardBack)}"
-        )
+        try {
+            // Upload new files
+            newIdFrontUrl = firebaseStorageService.uploadFile(
+                file = idCardFront,
+                folder = "craftsmen/$craftsmanId/id-cards",
+                fileName = "id-front-${System.currentTimeMillis()}.${getFileExtension(idCardFront)}"
+            )
 
-        // Update craftsman
-        val updatedCraftsman = craftsman.copy(
-            verification = craftsman.verification.copy(
-                idCardFront = idFrontUrl,
-                idCardBack = idBackUrl,
-                verificationStatus = updateVerificationStatus(craftsman.verification)
-            ),
-            updatedAt = Instant.now()
-        )
+            newIdBackUrl = firebaseStorageService.uploadFile(
+                file = idCardBack,
+                folder = "craftsmen/$craftsmanId/id-cards",
+                fileName = "id-back-${System.currentTimeMillis()}.${getFileExtension(idCardBack)}"
+            )
 
-        return craftsmanRepository.save(updatedCraftsman)
+            // Only delete old files after successful upload
+            listOfNotNull(oldIdFront, oldIdBack).forEach { url ->
+                firebaseStorageService.deleteFileByUrl(url)
+            }
+
+            // Update database
+            val updatedCraftsman = craftsman.copy(
+                verification = craftsman.verification.copy(
+                    idCardFront = newIdFrontUrl,
+                    idCardBack = newIdBackUrl,
+                    verificationStatus = updateVerificationStatus(
+                        craftsman.verification.copy(
+                            idCardFront = newIdFrontUrl,
+                            idCardBack = newIdBackUrl
+                        )
+                    )
+                ),
+                updatedAt = Instant.now()
+            )
+
+            return craftsmanRepository.save(updatedCraftsman)
+
+        } catch (e: Exception) {
+            // Rollback: delete any newly uploaded files
+            newIdFrontUrl?.let { firebaseStorageService.deleteFileByUrl(it) }
+            newIdBackUrl?.let { firebaseStorageService.deleteFileByUrl(it) }
+            throw e
+        }
     }
 
     @Transactional
@@ -103,9 +118,10 @@ class CraftsmanService(
         validateWorkImages(workImages)
 
         // Delete old work images
-//        craftsman.verification.workVerificationImages.forEach { url ->
-//            deleteFileFromUrl(url)
-//        }
+        if (craftsman.verification.workVerificationImages.isNotEmpty()) {
+            println("Deleting ${craftsman.verification.workVerificationImages.size} old work images")
+            firebaseStorageService.deleteMultipleFilesByUrls(craftsman.verification.workVerificationImages)
+        }
 
         // Upload new work images
         val workUrls = workImages.mapIndexed { index, file ->
@@ -128,89 +144,25 @@ class CraftsmanService(
         return craftsmanRepository.save(updatedCraftsman)
     }
 
+    @Transactional
+    fun deleteCraftsmanAccount(craftsmanId: String, userId: String): Boolean {
+        val craftsman = validateCraftsmanOwnership(craftsmanId, userId)
 
+        // Collect all file URLs
+        val allUrls = mutableListOf<String>()
+        craftsman.verification.idCardFront?.let { allUrls.add(it) }
+        craftsman.verification.idCardBack?.let { allUrls.add(it) }
+        allUrls.addAll(craftsman.verification.workVerificationImages)
 
-
-//    @Transactional
-//    fun uploadVerificationDocuments(
-//        craftsmanId: String,
-//        userId: String,
-//        idCardFront: MultipartFile,
-//        idCardBack: MultipartFile,
-//        workImages: List<MultipartFile>
-//    ): Craftsman {
-//        // Find craftsman
-//        val craftsman = craftsmanRepository.findById(ObjectId(craftsmanId))
-//            .orElseThrow { NotFoundException("Craftsman not found") }
-//
-//        // Verify ownership
-//        if (craftsman.userId != userId) {
-//            throw ForbiddenException("You don't have permission to update this profile")
-//        }
-//
-//        // Validate files
-//        validateImageFiles(listOf(idCardFront, idCardBack) + workImages)
-//
-//        // Upload to Firebase Storage with organized folder structure
-//        val idFrontUrl = firebaseStorageService.uploadFile(
-//            file = idCardFront,
-//            folder = "craftsmen/$craftsmanId/id-cards",
-//            fileName = "id-front.${getFileExtension(idCardFront)}"
-//        )
-//
-//        val idBackUrl = firebaseStorageService.uploadFile(
-//            file = idCardBack,
-//            folder = "craftsmen/$craftsmanId/id-cards",
-//            fileName = "id-back.${getFileExtension(idCardBack)}"
-//        )
-//
-//        val workUrls = workImages.mapIndexed { index, file ->
-//            firebaseStorageService.uploadFile(
-//                file = file,
-//                folder = "craftsmen/$craftsmanId/work-verification",
-//                fileName = "work-$index.${getFileExtension(file)}"
-//            )
-//        }
-//
-//        // Update craftsman with URLs
-//        val updatedCraftsman = craftsman.copy(
-//            verification = craftsman.verification.copy(
-//                idCardFront = idFrontUrl,
-//                idCardBack = idBackUrl,
-//                workVerificationImages = workUrls,
-//                verificationStatus = VerificationStatus.PENDING
-//            ),
-//            updatedAt = Instant.now()
-//        )
-//
-//        return craftsmanRepository.save(updatedCraftsman)
-//    }
-
-
-//    private fun validateImageFiles(files: List<MultipartFile>) {
-//        val allowedTypes = listOf("image/jpeg", "image/png", "image/jpg")
-//        val maxSize = 5 * 1024 * 1024 // 5MB
-//
-//        files.forEach { file ->
-//            if (!allowedTypes.contains(file.contentType)) {
-//                throw BadRequestException("Invalid file type: ${file.originalFilename}. Only JPEG and PNG are allowed.")
-//            }
-//            if (file.size > maxSize) {
-//                throw BadRequestException("File ${file.originalFilename} exceeds 5MB limit.")
-//            }
-//            if (file.isEmpty) {
-//                throw BadRequestException("Empty file: ${file.originalFilename}")
-//            }
-//        }
-//    }
-
-
-    private fun updateVerificationStatus(verification: Verification): VerificationStatus {
-        return when {
-            verification.idCardFront == null || verification.idCardBack == null -> VerificationStatus.NOT_SUBMITTED
-            verification.workVerificationImages.isEmpty() -> VerificationStatus.NOT_SUBMITTED
-            else -> VerificationStatus.PENDING
+        // Delete all files
+        if (allUrls.isNotEmpty()) {
+            firebaseStorageService.deleteMultipleFilesByUrls(allUrls)
         }
+
+        // Delete craftsman record
+        craftsmanRepository.deleteById(ObjectId(craftsmanId))
+
+        return true
     }
 
     fun getCraftsmanStatus(craftsmanId: String): CraftsmanStatusResponse {
@@ -238,15 +190,6 @@ class CraftsmanService(
             .orElseThrow { NotFoundException("Craftsman not found") }
     }
 
-    private fun deleteFileFromUrl(url: String) {
-        // Extract path from Firebase URL
-        // This is a simplified version - you might need to parse the URL properly
-        try {
-            //firebaseStorageService.deleteFile(extractPathFromUrl(url))
-        } catch (e: Exception) {
-            // Log error but don't fail the upload
-        }
-    }
 
     private fun validateCraftsmanOwnership(craftsmanId: String, userId: String): Craftsman {
         val craftsman = craftsmanRepository.findById(ObjectId(craftsmanId))
@@ -287,6 +230,14 @@ class CraftsmanService(
 
             // Future: Add ID card validation here
             // validateIdCardContent(file)
+        }
+    }
+
+    private fun updateVerificationStatus(verification: Verification): VerificationStatus {
+        return when {
+            verification.idCardFront == null || verification.idCardBack == null -> VerificationStatus.NOT_SUBMITTED
+            verification.workVerificationImages.isEmpty() -> VerificationStatus.NOT_SUBMITTED
+            else -> VerificationStatus.PENDING
         }
     }
 
