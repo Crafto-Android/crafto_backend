@@ -88,12 +88,12 @@ class CraftsmanController(
     ): ResponseEntity<WorkPortfolioUploadResponse> {
 
         // Validate work images count
-        if (workImages.isEmpty() || workImages.size > 10) {
+        if (workImages.isEmpty() || workImages.size > 4) {
             return ResponseEntity.badRequest().body(
                 WorkPortfolioUploadResponse(
                     craftsmanId = craftsmanId,
                     workImageUrls = emptyList(),
-                    message = "Please upload between 1 and 10 work images",
+                    message = "Please upload between 1 and 4 work images",
                     totalImages = 0
                 )
             )

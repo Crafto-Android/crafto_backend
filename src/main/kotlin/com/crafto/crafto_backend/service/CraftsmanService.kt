@@ -204,7 +204,7 @@ class CraftsmanService(
 
     private fun validateWorkImages(files: List<MultipartFile>) {
         val allowedTypes = listOf("image/jpeg", "image/png", "image/jpg")
-        val maxSize = 10 * 1024 * 1024 // 10MB for work images
+        val maxSize = 16 * 1024 * 1024 // 16MB for work images
 
         files.forEach { file ->
             if (!allowedTypes.contains(file.contentType)) {
@@ -218,7 +218,7 @@ class CraftsmanService(
 
     private fun validateIdCardFiles(files: List<MultipartFile>) {
         val allowedTypes = listOf("image/jpeg", "image/png", "image/jpg")
-        val maxSize = 5 * 1024 * 1024 // 5MB
+        val maxSize = 4 * 1024 * 1024 // 4MB
 
         files.forEach { file ->
             if (!allowedTypes.contains(file.contentType)) {
