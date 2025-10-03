@@ -3,5 +3,8 @@ package com.crafto.crafto_backend.dto
 data class CategoryResponse(
     val categoryId:String,
     val categoryName:String,
-    val categoryColor:String
+    val categoryColor:String,
+    val categoryIconUrl:String,
+    val categoryDescription:String
+
 )
