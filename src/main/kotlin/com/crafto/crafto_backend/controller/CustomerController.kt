@@ -1,6 +1,6 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.request.CustomerRequest
+import com.crafto.crafto_backend.dto.CustomerRequest
 import com.crafto.crafto_backend.service.CustomerService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

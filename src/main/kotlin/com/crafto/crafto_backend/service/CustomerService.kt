@@ -3,7 +3,7 @@ package com.crafto.crafto_backend.service
 import com.crafto.crafto_backend.mapper.toEntity
 import com.crafto.crafto_backend.mapper.toResponse
 import com.crafto.crafto_backend.database.repository.CustomerRepository
-import com.crafto.crafto_backend.request.CustomerRequest
+import com.crafto.crafto_backend.dto.CustomerRequest
 import com.crafto.crafto_backend.dto.CustomerResponse
 import org.springframework.stereotype.Service
 

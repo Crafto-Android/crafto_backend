@@ -1,8 +1,7 @@
 package com.crafto.crafto_backend.mapper
 
 import com.crafto.crafto_backend.database.entity.Customer
-import com.crafto.crafto_backend.request.CustomerRequest
-import com.crafto.crafto_backend.response.CustomerResponse
+import com.crafto.crafto_backend.dto.CustomerRequest
 import com.crafto.crafto_backend.dto.CustomerResponse
 
 fun Customer.toResponse() = CustomerResponse(
