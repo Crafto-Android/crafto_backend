@@ -1,5 +1,6 @@
 package com.crafto.crafto_backend.service
 
+import com.crafto.crafto_backend.entity.Category
 import com.crafto.crafto_backend.mapper.toEntity
 import com.crafto.crafto_backend.mapper.toResponse
 import com.crafto.crafto_backend.repository.CategoryRepository
@@ -25,7 +26,29 @@ class CustomerService(
         return customer.toResponse()
     }
 
-    fun saveCustomerIssue(body: CustomerIssueRequest, photos: List<MultipartFile>): CustomerIssueResponse{
+    fun getCustomerIssues(customerId: String): List<CustomerIssueResponse> {
+        println("------------------------------------")
+        val issues = customerIssueRepository.findByCustomerId(customerId)
+        println(issues)
+        val categories = mutableListOf<Category>()
+        issues.forEach {
+            val category = categoryRepository.findById(it.categoryId)
+                .orElseThrow {
+                    Exception()
+                }
+            categories.add(category)
+        }
+        return issues.map { issue ->
+            categories.find { it.id == issue.categoryId }.let { category ->
+                issue.toResponse(category ?: throw Exception())
+            }
+        }
+    }
+
+    fun saveCustomerIssue(
+        body: CustomerIssueRequest,
+        photos: List<MultipartFile>
+    ): CustomerIssueResponse {
         val category = categoryRepository.findById(body.categoryId)
             .orElseThrow {
                 Exception()
@@ -54,6 +77,6 @@ class CustomerService(
     }
 
     companion object {
-        private val IMAGE_FOLDER_NAME = "images"
+        private const val IMAGE_FOLDER_NAME = "images"
     }
 }

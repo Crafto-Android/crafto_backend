@@ -54,6 +54,7 @@ class ImageStorageService(
             )
 
             // Generate download URL
+
             return String.format(props.downloadUrl, props.bucket, storagePath)
         } catch (ex: Exception) {
             throw RuntimeException("Failed to upload image to Firebase Storage", ex)

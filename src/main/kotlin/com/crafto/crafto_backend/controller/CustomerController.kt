@@ -4,6 +4,8 @@ import com.crafto.crafto_backend.request.CustomerIssueRequest
 import com.crafto.crafto_backend.request.CustomerRequest
 import com.crafto.crafto_backend.response.CustomerIssueResponse
 import com.crafto.crafto_backend.service.CustomerService
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile
 
 // POST  http://localhost:8085/customer
 // POST  http://localhost:8085/customer/issue
+// GET  http://localhost:8085/customer/issue
 
 @RestController
 @RequestMapping("/customer")
@@ -33,7 +36,7 @@ class CustomerController(private val customerService: CustomerService) {
         @RequestParam districtName: String,
         @RequestParam locationDetails: String,
         @RequestParam photos: List<MultipartFile>
-    ) : CustomerIssueResponse {
+    ): CustomerIssueResponse {
         val body = CustomerIssueRequest(
             customerId = customerId,
             issueTitle = issueTitle,
@@ -48,4 +51,8 @@ class CustomerController(private val customerService: CustomerService) {
         val response = customerService.saveCustomerIssue(body = body, photos)
         return response
     }
+
+    @GetMapping("/issue/{customerId}")
+    fun getCustomerIssuesById(@PathVariable customerId: String) =
+        customerService.getCustomerIssues(customerId)
 }
