@@ -1,5 +1,6 @@
 package com.crafto.crafto_backend.controller
 
+import com.crafto.crafto_backend.constant.ApiEndpoints
 import com.crafto.crafto_backend.dto.CraftsmanProfileResponse
 import com.crafto.crafto_backend.dto.CraftsmanSetupRequest
 import com.crafto.crafto_backend.dto.CraftsmanSetupResponse
@@ -22,21 +23,20 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 // POST  http://localhost:8085/craftsman/setup
-// POST  http://localhost:8085/craftsman/{craftsmanId}/verify/upload-documents
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/id-cards
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/work-portfolio
 // POST  http://localhost:8085/craftsman/{craftsmanId}/delete-account
 // GET   http://localhost:8085/craftsman/{craftsmanId}/status
-// GET  http://localhost:8085/craftsman/profile
-// GET http://localhost:8085/craftsman/{craftsmanId}
+// GET   http://localhost:8085/craftsman/profile
+// GET   http://localhost:8085/craftsman/{craftsmanId}
 
 @RestController
-@RequestMapping("/craftsman")
+@RequestMapping(ApiEndpoints.Craftsman.BASE)
 class CraftsmanController(
     private val craftsmanService: CraftsmanService
 ) {
 
-    @PostMapping("/setup")
+    @PostMapping(ApiEndpoints.Craftsman.SETUP)
     fun setupBasicInfo(
         @Valid @RequestBody setupRequest: CraftsmanSetupRequest,
         @RequestHeader("userId") userId: String
@@ -53,7 +53,7 @@ class CraftsmanController(
         )
     }
 
-    @PostMapping("/{craftsmanId}/verify/id-cards", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping(ApiEndpoints.Craftsman.Verify.ID_CARDS, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadIdCards(
         @PathVariable craftsmanId: String,
         @RequestParam("idCardFront") idCardFront: MultipartFile,
@@ -80,7 +80,7 @@ class CraftsmanController(
     }
 
     // Upload work verification images only
-    @PostMapping("/{craftsmanId}/verify/work-portfolio", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping(ApiEndpoints.Craftsman.Verify.WORK_PORTFOLIO, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadWorkPortfolio(
         @PathVariable craftsmanId: String,
         @RequestParam("workImages") workImages: List<MultipartFile>,
@@ -115,7 +115,7 @@ class CraftsmanController(
         )
     }
 
-    @GetMapping("/{craftsmanId}/status")
+    @GetMapping(ApiEndpoints.Craftsman.STATUS)
     fun getCraftsmanStatus(
         @PathVariable craftsmanId: String
     ): ResponseEntity<CraftsmanStatusResponse> {
@@ -123,7 +123,7 @@ class CraftsmanController(
     }
 
     // Get craftsman profile
-    @GetMapping("/profile")
+    @GetMapping(ApiEndpoints.Craftsman.PROFILE)
     fun getCraftsmanProfile(
         @RequestHeader("userId") userId: String
     ): ResponseEntity<CraftsmanProfileResponse> {
@@ -142,7 +142,7 @@ class CraftsmanController(
         )
     }
 
-    @GetMapping("/{craftsmanId}")
+    @GetMapping(ApiEndpoints.Craftsman.BY_ID)
     fun getCraftsmanByDatabaseId(
         @PathVariable craftsmanId: String
     ): ResponseEntity<CraftsmanProfileResponse> {
@@ -161,7 +161,7 @@ class CraftsmanController(
         )
     }
 
-    @PostMapping("/{craftsmanId}/delete-account")
+    @PostMapping(ApiEndpoints.Craftsman.DELETE_ACCOUNT)
     fun deleteCraftsmanAccount(
         @PathVariable craftsmanId: String,
         @RequestHeader("userId") userId: String

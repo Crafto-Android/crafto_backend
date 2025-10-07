@@ -1,5 +1,6 @@
 package com.crafto.crafto_backend.service
 
+import com.crafto.crafto_backend.constant.AppConstants
 import com.crafto.crafto_backend.database.entity.*
 import com.crafto.crafto_backend.database.repository.CraftsmanRepository
 import com.crafto.crafto_backend.dto.*
@@ -66,13 +67,13 @@ class CraftsmanService(
             // Upload new files
             newIdFrontUrl = firebaseStorageService.uploadFile(
                 file = idCardFront,
-                folder = "craftsmen/$craftsmanId/id-cards",
+                folder = AppConstants.StoragePaths.craftsmanIdCards(craftsmanId),
                 fileName = "id-front-${System.currentTimeMillis()}.${getFileExtension(idCardFront)}"
             )
 
             newIdBackUrl = firebaseStorageService.uploadFile(
                 file = idCardBack,
-                folder = "craftsmen/$craftsmanId/id-cards",
+                folder = AppConstants.StoragePaths.craftsmanIdCards(craftsmanId),
                 fileName = "id-back-${System.currentTimeMillis()}.${getFileExtension(idCardBack)}"
             )
 
@@ -81,22 +82,17 @@ class CraftsmanService(
                 firebaseStorageService.deleteFileByUrlAsync(url)
             }
 
-            // Update database
-            val updatedCraftsman = craftsman.copy(
-                verification = craftsman.verification.copy(
-                    idCardFront = newIdFrontUrl,
-                    idCardBack = newIdBackUrl,
-                    verificationStatus = updateVerificationStatus(
-                        craftsman.verification.copy(
-                            idCardFront = newIdFrontUrl,
-                            idCardBack = newIdBackUrl
-                        )
-                    )
-                ),
-                updatedAt = Instant.now()
-            )
+            val updatedVerification = craftsman.verification.copy(
+                idCardFront = newIdFrontUrl,
+                idCardBack = newIdBackUrl,)
 
-            return craftsmanRepository.save(updatedCraftsman)
+            // Update database
+            return craftsmanRepository.save(
+                craftsman.copy(
+                    verification = updatedVerification,
+                    updatedAt = Instant.now()
+                )
+            )
 
         } catch (e: Exception) {
             // Rollback: delete any newly uploaded files
@@ -127,16 +123,20 @@ class CraftsmanService(
         val workUrls = workImages.mapIndexed { index, file ->
             firebaseStorageService.uploadFile(
                 file = file,
-                folder = "craftsmen/$craftsmanId/work-portfolio",
+                folder = AppConstants.StoragePaths.craftsmanWorkPortfolio(craftsmanId),
                 fileName = "work-${System.currentTimeMillis()}-$index.${getFileExtension(file)}"
             )
         }
 
+        // Create updated verification ONCE
+        val updatedVerification = craftsman.verification.copy(
+            workVerificationImages = workUrls
+        )
+
         // Update craftsman
         val updatedCraftsman = craftsman.copy(
-            verification = craftsman.verification.copy(
-                workVerificationImages = workUrls,
-                verificationStatus = updateVerificationStatus(craftsman.verification)
+            verification = updatedVerification.copy(
+                verificationStatus = updateVerificationStatus(updatedVerification)
             ),
             updatedAt = Instant.now()
         )
@@ -202,35 +202,39 @@ class CraftsmanService(
         return craftsman
     }
 
-    private fun validateWorkImages(files: List<MultipartFile>) {
-        val allowedTypes = listOf("image/jpeg", "image/png", "image/jpg")
-        val maxSize = 16 * 1024 * 1024 // 16MB for work images
-
+    private fun validateImageFiles(
+        files: List<MultipartFile>,
+        fileType: String = "Image",
+        maxSizeBytes: Int = AppConstants.FileUpload.MAX_FILE_SIZE_BYTES
+    ) {
         files.forEach { file ->
-            if (!allowedTypes.contains(file.contentType)) {
-                throw BadRequestException("Work images must be JPEG or PNG format")
+            if (file.isEmpty) {
+                throw BadRequestException("Empty file uploaded")
             }
-            if (file.size > maxSize) {
-                throw BadRequestException("Work image ${file.originalFilename} exceeds 10MB limit")
+
+            if (!AppConstants.FileUpload.ALLOWED_IMAGE_TYPES.contains(file.contentType)) {
+                throw BadRequestException(
+                    "$fileType must be ${AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS} format"
+                )
+            }
+
+            if (file.size > maxSizeBytes) {
+                throw BadRequestException(
+                    "$fileType ${file.originalFilename} exceeds ${AppConstants.FileUpload.MAX_FILE_SIZE_MB} MB limit"
+                )
             }
         }
     }
 
+    private fun validateWorkImages(files: List<MultipartFile>) {
+        validateImageFiles(files, fileType = "Work image")
+    }
+
     private fun validateIdCardFiles(files: List<MultipartFile>) {
-        val allowedTypes = listOf("image/jpeg", "image/png", "image/jpg")
-        val maxSize = 4 * 1024 * 1024 // 4MB
+        validateImageFiles(files, fileType = "ID card")
 
-        files.forEach { file ->
-            if (!allowedTypes.contains(file.contentType)) {
-                throw BadRequestException("ID cards must be JPEG or PNG format")
-            }
-            if (file.size > maxSize) {
-                throw BadRequestException("ID card image must be less than 5MB")
-            }
-
-            // Future: Add ID card validation here
-            // validateIdCardContent(file)
-        }
+        // TODO Future: Add ID card validation here
+        // validateIdCardContent(file)
     }
 
     private fun updateVerificationStatus(verification: Verification): VerificationStatus {
@@ -242,6 +246,18 @@ class CraftsmanService(
     }
 
     private fun getFileExtension(file: MultipartFile): String {
-        return file.originalFilename?.substringAfterLast('.', "jpg") ?: "jpg"
+        val filename = file.originalFilename ?: return "jpg"
+
+        return if (filename.contains('.')) {
+            val extension = filename.substringAfterLast('.').lowercase()
+            // Validate it's an allowed extension
+            if (AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS.contains(extension)) {
+                extension
+            } else {
+                "jpg"
+            }
+        } else {
+            "jpg"
+        }
     }
 }
