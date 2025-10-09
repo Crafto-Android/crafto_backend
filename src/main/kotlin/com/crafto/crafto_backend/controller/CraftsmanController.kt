@@ -1,11 +1,14 @@
 package com.crafto.crafto_backend.controller
 
 import com.crafto.crafto_backend.constant.ApiEndpoints
+import com.crafto.crafto_backend.constant.AppConstants.Validation.MAX_WORK_IMAGES
+import com.crafto.crafto_backend.constant.AppConstants.Validation.MIN_WORK_IMAGES
 import com.crafto.crafto_backend.dto.CraftsmanProfileResponse
 import com.crafto.crafto_backend.dto.CraftsmanSetupRequest
 import com.crafto.crafto_backend.dto.CraftsmanSetupResponse
 import com.crafto.crafto_backend.dto.CraftsmanStatusResponse
 import com.crafto.crafto_backend.dto.IdCardUploadResponse
+import com.crafto.crafto_backend.dto.VerificationInfo
 import com.crafto.crafto_backend.dto.WorkPortfolioUploadResponse
 import com.crafto.crafto_backend.service.CraftsmanService
 import jakarta.validation.Valid
@@ -88,12 +91,12 @@ class CraftsmanController(
     ): ResponseEntity<WorkPortfolioUploadResponse> {
 
         // Validate work images count
-        if (workImages.isEmpty() || workImages.size > 4) {
+        if (workImages.isEmpty() || workImages.size > MAX_WORK_IMAGES) {
             return ResponseEntity.badRequest().body(
                 WorkPortfolioUploadResponse(
                     craftsmanId = craftsmanId,
                     workImageUrls = emptyList(),
-                    message = "Please upload between 1 and 4 work images",
+                    message = "Please upload between $MIN_WORK_IMAGES and $MAX_WORK_IMAGES work images",
                     totalImages = 0
                 )
             )
@@ -136,7 +139,12 @@ class CraftsmanController(
                 personalInfo = craftsman.personalInfo,
                 categories = craftsman.categories,
                 status = craftsman.status,
-                verificationStatus = craftsman.verification.verificationStatus,
+                verificationInfo = VerificationInfo(
+                    status = craftsman.verification.verificationStatus,
+                    idCardFrontUrl = craftsman.verification.idCardFront,
+                    idCardBackUrl = craftsman.verification.idCardBack,
+                    workPortfolioUrls = craftsman.verification.workVerificationImages
+                ),
                 createdAt = craftsman.createdAt
             )
         )
@@ -155,7 +163,12 @@ class CraftsmanController(
                 personalInfo = craftsman.personalInfo,
                 categories = craftsman.categories,
                 status = craftsman.status,
-                verificationStatus = craftsman.verification.verificationStatus,
+                verificationInfo = VerificationInfo(
+                    status = craftsman.verification.verificationStatus,
+                    idCardFrontUrl = craftsman.verification.idCardFront,
+                    idCardBackUrl = craftsman.verification.idCardBack,
+                    workPortfolioUrls = craftsman.verification.workVerificationImages
+                ),
                 createdAt = craftsman.createdAt
             )
         )

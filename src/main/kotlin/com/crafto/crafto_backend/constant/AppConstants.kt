@@ -19,7 +19,6 @@ object AppConstants {
         const val WORK_PORTFOLIO = "work-portfolio"
         const val PROFILE_PICTURES = "profile-pictures"
         const val CATEGORY_ICONS = "category-icons"
-        const val TEST_UPLOADS = "test-uploads"
 
         fun craftsmanIdCards(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$ID_CARDS"
         fun craftsmanWorkPortfolio(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$WORK_PORTFOLIO"
@@ -31,7 +30,7 @@ object AppConstants {
         const val MIN_CATEGORIES = 1
         const val MAX_CATEGORIES = 5
         const val MIN_WORK_IMAGES = 1
-        const val MAX_WORK_IMAGES = 10
+        const val MAX_WORK_IMAGES = 4
     }
 
     // Default values

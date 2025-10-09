@@ -1,5 +1,6 @@
 package com.crafto.crafto_backend.dto
 
+import com.crafto.crafto_backend.constant.AppConstants.Validation.PHONE_REGEX
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
@@ -8,7 +9,7 @@ data class PersonalInfoDto(
     val firstName: String,
     @field:NotBlank(message = "Last name is required")
     val lastName: String,
-    @field:Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number")
+    @field:Pattern(regexp = PHONE_REGEX, message = "Invalid phone number")
     val phoneNumber: String,
     val address: String?
 )

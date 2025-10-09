@@ -17,8 +17,15 @@ data class CraftsmanProfileResponse(
     val personalInfo: PersonalInfo,
     val categories: List<String>,
     val status: CraftsmanStatus,
-    val verificationStatus: VerificationStatus,
-    val createdAt: Instant
+    val verificationInfo: VerificationInfo,
+    val createdAt: Instant,
+)
+
+data class VerificationInfo(
+    val status: VerificationStatus,
+    val idCardFrontUrl: String? = null,
+    val idCardBackUrl: String? = null,
+    val workPortfolioUrls: List<String> = emptyList()
 )
 
 data class VerificationUploadResponse(
