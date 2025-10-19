@@ -1,6 +1,5 @@
 package com.crafto.crafto_backend.mapper
 
-import com.crafto.crafto_backend.entity.Category
 import com.crafto.crafto_backend.entity.CustomerIssue
 import com.crafto.crafto_backend.entity.CustomerIssueStatus
 import com.crafto.crafto_backend.request.CustomerIssueRequest
@@ -19,6 +18,7 @@ fun CustomerIssueRequest.toEntity(imgs: List<String>, status: CustomerIssueStatu
 )
 
 fun CustomerIssue.toResponse() = CustomerIssueResponse(
+    id = id ?: throw Exception("issue not fount"),
     title = title,
     description = description,
     status = status,

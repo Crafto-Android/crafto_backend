@@ -3,6 +3,7 @@ package com.crafto.crafto_backend.response
 import com.crafto.crafto_backend.entity.CustomerIssueStatus
 
 data class CustomerIssueResponse(
+    val id: String,
     val title: String,
     val description: String,
     val status: CustomerIssueStatus,

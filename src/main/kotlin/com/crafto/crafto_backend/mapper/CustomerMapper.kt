@@ -3,9 +3,9 @@ package com.crafto.crafto_backend.mapper
 import com.crafto.crafto_backend.entity.Customer
 import com.crafto.crafto_backend.request.CustomerRequest
 import com.crafto.crafto_backend.response.CustomerResponse
-import org.bson.types.ObjectId
 
 fun Customer.toResponse() = CustomerResponse(
+    id = id ?: throw Exception("issue not fount"),
     name = name,
     profilePhoto = profilePhoto,
     governorate = governorate,
