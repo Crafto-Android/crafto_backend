@@ -27,4 +27,9 @@ class CraftsmanService(
         val offer = craftsManOfferRepository.save(body.toEntity(isSelected = false))
         return offer.toResponse()
     }
+
+    fun getOffersByCustomerId(customerId: String): List<CraftsmanOfferResponse> {
+        val issues = craftsManOfferRepository.findByCustomerId(customerId)
+        return issues.map { it.toResponse() }
+    }
 }
