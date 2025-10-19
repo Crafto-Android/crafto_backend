@@ -22,7 +22,11 @@ class CraftsManController(
         service.saveCraftsmanOffer(body)
 
 
-    @GetMapping("/offer/{customerId}")
-    fun getCustomerIssuesById(@PathVariable customerId: String) =
+    @GetMapping("/offer/customer_id/{customerId}")
+    fun getCraftsmanOffersByCustomerId(@PathVariable customerId: String) =
         service.getOffersByCustomerId(customerId)
+
+    @GetMapping("/offer/customer_issue_id/{customerIssueId}")
+    fun getCraftsmanOffersByCustomerIssueId(@PathVariable customerIssueId: String) =
+        service.getOffersByCustomerIssueId(customerIssueId)
 }

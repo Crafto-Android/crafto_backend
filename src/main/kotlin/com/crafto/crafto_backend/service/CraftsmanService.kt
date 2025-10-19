@@ -32,4 +32,9 @@ class CraftsmanService(
         val issues = craftsManOfferRepository.findByCustomerId(customerId)
         return issues.map { it.toResponse() }
     }
+
+    fun getOffersByCustomerIssueId(customerIssueId: String): List<CraftsmanOfferResponse> {
+        val issues = craftsManOfferRepository.findByCustomerIssueId(customerIssueId)
+        return issues.map { it.toResponse() }
+    }
 }
