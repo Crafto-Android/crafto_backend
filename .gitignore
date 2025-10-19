@@ -41,3 +41,4 @@ out/
 
 **/src/main/resources/google-services.json
 **/src/main/resources/firebase-service-account.json
+local.properties
