@@ -1,4 +1,3 @@
-// DistrictResponse.kt
 package com.crafto.crafto_backend.dto
 
 data class DistrictResponse(

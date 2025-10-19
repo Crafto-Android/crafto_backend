@@ -1,4 +1,3 @@
-// GovernorateMapper.kt
 package com.crafto.crafto_backend.mapper
 
 import com.crafto.crafto_backend.entity.Governorates

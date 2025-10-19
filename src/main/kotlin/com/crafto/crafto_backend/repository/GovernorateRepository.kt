@@ -1,4 +1,3 @@
-// GovernorateRepository.kt
 package com.crafto.crafto_backend.repository
 
 import com.crafto.crafto_backend.entity.Governorates

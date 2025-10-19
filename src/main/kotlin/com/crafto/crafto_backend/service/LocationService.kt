@@ -1,4 +1,3 @@
-// LocationService.kt
 package com.crafto.crafto_backend.service
 
 import com.crafto.crafto_backend.dto.DistrictResponse

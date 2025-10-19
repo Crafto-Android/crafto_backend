@@ -1,4 +1,3 @@
-// District.kt
 package com.crafto.crafto_backend.entity
 
 import org.springframework.data.annotation.Id
