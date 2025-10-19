@@ -21,9 +21,14 @@ class SharedService (
     }
 
     fun search(query:String) : List<Category>{
-        val pattern=".*${Regex.escape(query)}.*"
-        val criteria = Criteria.where("categoryName").regex(pattern,"i") // i-> refer to ignore case-insensitive
-        val q = Query(criteria)
+        val pattern="^${Regex.escape(query)}"
+        val criteria = Criteria.where(CATEGORY_INDEX_KEY).regex(pattern,"i") // i-> refer to ignore case-insensitive
+        val q = Query(criteria).limit(10)
         return mongoTemplate.find(q, Category::class.java)
+    }
+
+
+    companion object {
+        const val CATEGORY_INDEX_KEY = "categoryName"
     }
 }
