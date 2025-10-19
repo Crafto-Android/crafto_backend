@@ -9,5 +9,7 @@ data class Category(
     val id: String,
     @TextIndexed
     val categoryName:String,
-    val categoryColor:String
+    val categoryColor:String,
+    val categoryIconUrl:String,
+    val categoryDescription:String
 )
