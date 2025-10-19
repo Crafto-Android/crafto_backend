@@ -1,13 +1,18 @@
 package com.crafto.crafto_backend.service
 
+import com.crafto.crafto_backend.entity.Customer
 import com.crafto.crafto_backend.entity.CustomerIssueStatus
+import com.crafto.crafto_backend.mapper.mapToCustomerIssueDetailsResponse
+import com.crafto.crafto_backend.mapper.toCategoryResponse
 import com.crafto.crafto_backend.mapper.toEntity
 import com.crafto.crafto_backend.mapper.toResponse
 import com.crafto.crafto_backend.repository.CategoryRepository
+import com.crafto.crafto_backend.repository.CraftsmanOfferRepository
 import com.crafto.crafto_backend.repository.CustomerIssueRepository
 import com.crafto.crafto_backend.repository.CustomerRepository
 import com.crafto.crafto_backend.request.CustomerIssueRequest
 import com.crafto.crafto_backend.request.CustomerRequest
+import com.crafto.crafto_backend.response.CustomerIssueDetailsResponse
 import com.crafto.crafto_backend.response.CustomerIssueResponse
 import com.crafto.crafto_backend.response.CustomerResponse
 import org.springframework.stereotype.Service
@@ -20,6 +25,7 @@ class CustomerService(
     private val customerIssueRepository: CustomerIssueRepository,
     private val categoryRepository: CategoryRepository,
     private val imageStorageService: ImageStorageService,
+    private val offerRepository: CraftsmanOfferRepository,
 ) {
     fun saveCustomer(body: CustomerRequest): CustomerResponse {
         val customer = customerRepository.save(body.toEntity())
@@ -34,23 +40,26 @@ class CustomerService(
     fun saveCustomerIssue(
         body: CustomerIssueRequest,
         photos: List<MultipartFile>
-    ): CustomerIssueResponse {
-        val urls = uploadProductImages(body.customerId, photos)
+    ): CustomerIssueResponse
+    {
+        val customer = customerRepository
+            .findById(body.customerId)
+            .orElseThrow { IllegalArgumentException("customer not found") }
+
+        val urls = uploadProductImages(customer, photos)
+
         val issue = customerIssueRepository.save(
             body.toEntity(
                 imgs = urls,
                 status = CustomerIssueStatus.SUBMITTED
             )
         )
+
         return issue.toResponse()
     }
 
     @Transactional
-    fun uploadProductImages(customerId: String, files: List<MultipartFile>): List<String> {
-        val customer = customerRepository.findById(customerId)
-            .orElseThrow {
-                Exception()
-            }
+    fun uploadProductImages(customer: Customer, files: List<MultipartFile>): List<String> {
         val imageUrls = mutableListOf<String>()
         files.forEach { file ->
             val imageUrl = imageStorageService.uploadImage(
@@ -61,6 +70,28 @@ class CustomerService(
             imageUrls.add(imageUrl)
         }
         return imageUrls
+    }
+
+    fun getCustomerIssueDetails(customerIssueId: String): CustomerIssueDetailsResponse{
+        val issue = customerIssueRepository
+            .findById(customerIssueId)
+            .orElseThrow { IllegalArgumentException("customer issue not found") }
+            .toResponse()
+
+        val offers = offerRepository
+            .findByCustomerIssueId(customerIssueId = issue.id)
+            .map { it.toResponse() }
+
+        val category = categoryRepository
+            .findById(issue.categoryId)
+            .orElseThrow { IllegalArgumentException("category not found") }
+            .toCategoryResponse()
+
+        return mapToCustomerIssueDetailsResponse(
+            issue = issue,
+            category = category,
+            offers = offers
+        )
     }
 
     companion object {

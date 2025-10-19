@@ -15,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile
 
 // POST  http://localhost:8085/customer
 // POST  http://localhost:8085/customer/issue
-// GET  http://localhost:8085/customer/issue
+// GET  http://localhost:8085/customer/issue/customer_id/{customerId}
+// GET  http://localhost:8085/customer/issue/customer_issue_id/{customerIssueId}
 
 @RestController
 @RequestMapping("/customer")
@@ -48,7 +49,11 @@ class CustomerController(private val customerService: CustomerService) {
         return response
     }
 
-    @GetMapping("/issue/{customerId}")
+    @GetMapping("/issue/customer_id/{customerId}")
     fun getCustomerIssuesById(@PathVariable customerId: String) =
         customerService.getCustomerIssues(customerId)
+
+    @GetMapping("/issue/customer_issue_id/{customerIssueId}")
+    fun getCustomerIssueDetailsById(@PathVariable customerIssueId: String) =
+        customerService.getCustomerIssueDetails(customerIssueId)
 }
