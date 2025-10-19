@@ -1,5 +1,5 @@
+// LocationService.kt
 package com.crafto.crafto_backend.service
-
 
 import com.crafto.crafto_backend.dto.DistrictResponse
 import com.crafto.crafto_backend.dto.GovernorateResponse
@@ -23,8 +23,7 @@ class LocationService(
         if (optionalGov.isEmpty) {
             return emptyList()
         }
-        val gov = optionalGov.get()
-        val districts = districtRepository.findAllById(gov.districts)
+        val districts = districtRepository.findByGovernorateId(governorateId)
         return districts.map { it.toAreaResponse() }
     }
 }
