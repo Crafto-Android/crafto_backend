@@ -1,6 +1,6 @@
 package com.crafto.crafto_backend.service
 
-import com.crafto.crafto_backend.entity.Category
+import com.crafto.crafto_backend.entity.CustomerIssueStatus
 import com.crafto.crafto_backend.mapper.toEntity
 import com.crafto.crafto_backend.mapper.toResponse
 import com.crafto.crafto_backend.repository.CategoryRepository
@@ -27,35 +27,22 @@ class CustomerService(
     }
 
     fun getCustomerIssues(customerId: String): List<CustomerIssueResponse> {
-        println("------------------------------------")
         val issues = customerIssueRepository.findByCustomerId(customerId)
-        println(issues)
-        val categories = mutableListOf<Category>()
-        issues.forEach {
-            val category = categoryRepository.findById(it.categoryId)
-                .orElseThrow {
-                    Exception()
-                }
-            categories.add(category)
-        }
-        return issues.map { issue ->
-            categories.find { it.id == issue.categoryId }.let { category ->
-                issue.toResponse(category ?: throw Exception())
-            }
-        }
+        return issues.map { it.toResponse() }
     }
 
     fun saveCustomerIssue(
         body: CustomerIssueRequest,
         photos: List<MultipartFile>
     ): CustomerIssueResponse {
-        val category = categoryRepository.findById(body.categoryId)
-            .orElseThrow {
-                Exception()
-            }
         val urls = uploadProductImages(body.customerId, photos)
-        val issue = customerIssueRepository.save(body.toEntity(urls))
-        return issue.toResponse(category)
+        val issue = customerIssueRepository.save(
+            body.toEntity(
+                imgs = urls,
+                status = CustomerIssueStatus.SUBMITTED
+            )
+        )
+        return issue.toResponse()
     }
 
     @Transactional
@@ -68,7 +55,7 @@ class CustomerService(
         files.forEach { file ->
             val imageUrl = imageStorageService.uploadImage(
                 file = file,
-                fileName = "${customer.name}-${customer.id}-${file.originalFilename}",
+                fileName = "${customer.id}-${file.originalFilename}",
                 folderName = IMAGE_FOLDER_NAME
             )
             imageUrls.add(imageUrl)
@@ -77,6 +64,6 @@ class CustomerService(
     }
 
     companion object {
-        private const val IMAGE_FOLDER_NAME = "images"
+        private const val IMAGE_FOLDER_NAME = "customer_issues_images"
     }
 }

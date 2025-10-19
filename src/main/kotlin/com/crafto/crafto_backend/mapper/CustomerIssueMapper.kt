@@ -2,29 +2,30 @@ package com.crafto.crafto_backend.mapper
 
 import com.crafto.crafto_backend.entity.Category
 import com.crafto.crafto_backend.entity.CustomerIssue
+import com.crafto.crafto_backend.entity.CustomerIssueStatus
 import com.crafto.crafto_backend.request.CustomerIssueRequest
 import com.crafto.crafto_backend.response.CustomerIssueResponse
 
-fun CustomerIssueRequest.toEntity(imgs: List<String>) = CustomerIssue(
+fun CustomerIssueRequest.toEntity(imgs: List<String>, status: CustomerIssueStatus) = CustomerIssue(
     customerId = customerId,
-    issueTitle = issueTitle,
-    issueContent = issueContent,
+    title = issueTitle,
+    description = issueContent,
     governmentId = governmentId,
-    governmentName = governmentName,
     districtId = districtId,
-    districtName = districtName,
     photos = imgs,
     locationDetails = locationDetails,
     categoryId = categoryId,
+    status = status
 )
 
-fun CustomerIssue.toResponse(category: Category) = CustomerIssueResponse(
+fun CustomerIssue.toResponse() = CustomerIssueResponse(
+    title = title,
+    description = description,
+    status = status,
     customerId = customerId,
-    issueTitle = issueTitle,
-    issueContent = issueContent,
-    governmentName = governmentName,
-    districtName = districtName,
-    photos = photos,
-    category = category,
+    categoryId = categoryId,
+    governmentId = governmentId,
+    districtId = districtId,
     locationDetails = locationDetails,
+    photos = photos
 )

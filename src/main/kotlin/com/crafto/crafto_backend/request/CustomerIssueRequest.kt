@@ -6,8 +6,6 @@ data class CustomerIssueRequest(
     val issueContent: String,
     val categoryId: String,
     val governmentId: String,
-    val governmentName: String,
     val districtId: String,
-    val districtName: String,
     val locationDetails: String,
 )

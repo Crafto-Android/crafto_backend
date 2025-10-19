@@ -40,7 +40,7 @@ class ImageStorageService(
             val uniqueFileName =
                 "${fileName}_${LocalDateTime.now()}_${UUID.randomUUID()}.$extension"
 
-            val storagePath = "images/$folderName/$uniqueFileName"
+            val storagePath = "$folderName/$uniqueFileName"
 
             val blobInfo = BlobInfo.newBuilder(BlobId.of(props.bucket, storagePath))
                 .setContentType(mimeType)
@@ -53,9 +53,8 @@ class ImageStorageService(
                 Bucket.BlobTargetOption.predefinedAcl(Storage.PredefinedAcl.PUBLIC_READ)
             )
 
-            // Generate download URL
-
             return String.format(props.downloadUrl, props.bucket, storagePath)
+
         } catch (ex: Exception) {
             throw RuntimeException("Failed to upload image to Firebase Storage", ex)
         }

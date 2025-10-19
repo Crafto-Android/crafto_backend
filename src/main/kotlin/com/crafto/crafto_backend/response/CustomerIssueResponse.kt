@@ -1,14 +1,15 @@
 package com.crafto.crafto_backend.response
 
-import com.crafto.crafto_backend.entity.Category
+import com.crafto.crafto_backend.entity.CustomerIssueStatus
 
 data class CustomerIssueResponse(
+    val title: String,
+    val description: String,
+    val status: CustomerIssueStatus,
+    val categoryId: String,
     val customerId: String,
-    val issueTitle: String,
-    val issueContent: String,
-    val category: Category,
-    val governmentName: String,
-    val districtName: String,
+    val governmentId: String,
+    val districtId: String,
     val locationDetails: String,
     val photos: List<String>
 )

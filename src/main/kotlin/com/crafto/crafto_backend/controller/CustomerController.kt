@@ -31,9 +31,7 @@ class CustomerController(private val customerService: CustomerService) {
         @RequestParam issueContent: String,
         @RequestParam categoryId: String,
         @RequestParam governmentId: String,
-        @RequestParam governmentName: String,
         @RequestParam districtId: String,
-        @RequestParam districtName: String,
         @RequestParam locationDetails: String,
         @RequestParam photos: List<MultipartFile>
     ): CustomerIssueResponse {
@@ -43,9 +41,7 @@ class CustomerController(private val customerService: CustomerService) {
             issueContent = issueContent,
             categoryId = categoryId,
             governmentId = governmentId,
-            governmentName = governmentName,
             districtId = districtId,
-            districtName = districtName,
             locationDetails = locationDetails
         )
         val response = customerService.saveCustomerIssue(body = body, photos)
