@@ -50,7 +50,7 @@ class CustomerController(private val customerService: CustomerService) {
     }
 
     @GetMapping("/issue/customer_id/{customerId}")
-    fun getCustomerIssuesById(@PathVariable customerId: String) =
+    fun getCustomerIssuesByCustomerId(@PathVariable customerId: String) =
         customerService.getCustomerIssues(customerId)
 
     @GetMapping("/issue/customer_issue_id/{customerIssueId}")
