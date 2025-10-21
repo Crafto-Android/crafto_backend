@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class Category(
     @Id
     val id: String,
-    @TextIndexed
     val categoryName:String,
     val categoryColor:String,
     val categoryIconUrl:String,
