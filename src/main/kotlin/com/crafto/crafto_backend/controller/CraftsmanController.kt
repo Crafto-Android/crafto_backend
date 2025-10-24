@@ -8,6 +8,7 @@ import com.crafto.crafto_backend.dto.CraftsmanSetupRequest
 import com.crafto.crafto_backend.dto.CraftsmanSetupResponse
 import com.crafto.crafto_backend.dto.CraftsmanStatusResponse
 import com.crafto.crafto_backend.dto.IdCardUploadResponse
+import com.crafto.crafto_backend.dto.ProfilePictureUploadResponse
 import com.crafto.crafto_backend.dto.VerificationInfo
 import com.crafto.crafto_backend.dto.WorkPortfolioUploadResponse
 import com.crafto.crafto_backend.service.CraftsmanService
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/id-cards
 // POST  http://localhost:8085/craftsman/{craftsmanId}/verify/work-portfolio
 // POST  http://localhost:8085/craftsman/{craftsmanId}/delete-account
+// POST  http://localhost:8085/craftsman/{craftsmanId}/profile-picture
 // GET   http://localhost:8085/craftsman/{craftsmanId}/status
 // GET   http://localhost:8085/craftsman/profile
 // GET   http://localhost:8085/craftsman/{craftsmanId}
@@ -78,6 +80,31 @@ class CraftsmanController(
                 idCardBackUrl = updatedCraftsman.verification.idCardBack!!,
                 message = "ID cards uploaded successfully",
                 idVerificationStatus = "PENDING_VERIFICATION" // Ready for future AI validation
+            )
+        )
+    }
+
+    @PostMapping(
+        ApiEndpoints.Craftsman.PROFILE_PICTURE,
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
+    )
+    fun uploadProfilePicture(
+        @PathVariable craftsmanId: String,
+        @RequestParam("profilePicture") profilePicture: MultipartFile,
+        @RequestHeader("userId") userId: String
+    ): ResponseEntity<ProfilePictureUploadResponse> {
+
+        val updatedCraftsman = craftsmanService.uploadProfilePicture(
+            craftsmanId = craftsmanId,
+            userId = userId,
+            profilePicture = profilePicture
+        )
+
+        return ResponseEntity.ok(
+            ProfilePictureUploadResponse(
+                craftsmanId = updatedCraftsman.id!!.toHexString(),
+                profilePictureUrl = updatedCraftsman.profilePictureUrl!!,
+                message = "Profile picture uploaded successfully"
             )
         )
     }
@@ -138,6 +165,7 @@ class CraftsmanController(
                 craftsmanId = craftsman.id!!.toHexString(),
                 personalInfo = craftsman.personalInfo,
                 categories = craftsman.categories,
+                profilePictureUrl = craftsman.profilePictureUrl,
                 status = craftsman.status,
                 verificationInfo = VerificationInfo(
                     status = craftsman.verification.verificationStatus,

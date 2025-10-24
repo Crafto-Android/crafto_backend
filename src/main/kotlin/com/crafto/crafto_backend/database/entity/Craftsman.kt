@@ -11,6 +11,7 @@ data class Craftsman(
     val id: ObjectId? = null,
     val userId: String,
     val personalInfo: PersonalInfo,
+    val profilePictureUrl: String? = null,
     val verification: Verification,
     val categories: List<String>,
     val status: CraftsmanStatus = CraftsmanStatus.PENDING_VERIFICATION,

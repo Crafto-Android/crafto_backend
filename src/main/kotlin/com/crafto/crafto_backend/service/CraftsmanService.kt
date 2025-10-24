@@ -34,6 +34,7 @@ class CraftsmanService(
                 phoneNumber = setupRequest.personalInfo.phoneNumber,
                 address = setupRequest.personalInfo.address
             ),
+            profilePictureUrl = null,
             verification = Verification(
                 idCardFront = null,
                 idCardBack = null,
@@ -145,6 +146,38 @@ class CraftsmanService(
     }
 
     @Transactional
+    fun uploadProfilePicture(
+        craftsmanId: String,
+        userId: String,
+        profilePicture: MultipartFile
+    ): Craftsman {
+        val craftsman = validateCraftsmanOwnership(craftsmanId, userId)
+
+        // Validate file
+        validateImageFile(profilePicture, "Profile picture")
+
+        // Delete old profile picture if exists
+        craftsman.profilePictureUrl?.let { oldUrl ->
+            firebaseStorageService.deleteFileByUrlAsync(oldUrl)
+        }
+
+        // Upload new profile picture
+        val profilePictureUrl = firebaseStorageService.uploadFile(
+            file = profilePicture,
+            folder = AppConstants.StoragePaths.craftsmanProfilePicture(craftsmanId),
+            fileName = "profile-${System.currentTimeMillis()}.${getFileExtension(profilePicture)}"
+        )
+
+        // Update craftsman
+        val updatedCraftsman = craftsman.copy(
+            profilePictureUrl = profilePictureUrl,
+            updatedAt = Instant.now()
+        )
+
+        return craftsmanRepository.save(updatedCraftsman)
+    }
+
+    @Transactional
     fun deleteCraftsmanAccount(craftsmanId: String, userId: String): Boolean {
         val craftsman = validateCraftsmanOwnership(craftsmanId, userId)
 
@@ -200,6 +233,24 @@ class CraftsmanService(
         }
 
         return craftsman
+    }
+
+    private fun validateImageFile(file: MultipartFile, fileType: String) {
+        if (file.isEmpty) {
+            throw BadRequestException("Empty file uploaded")
+        }
+
+        if (!AppConstants.FileUpload.ALLOWED_IMAGE_TYPES.contains(file.contentType)) {
+            throw BadRequestException(
+                "$fileType must be ${AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS.joinToString()} format"
+            )
+        }
+
+        if (file.size > AppConstants.FileUpload.MAX_FILE_SIZE_BYTES) {
+            throw BadRequestException(
+                "$fileType exceeds ${AppConstants.FileUpload.MAX_FILE_SIZE_MB} MB limit"
+            )
+        }
     }
 
     private fun validateImageFiles(

@@ -8,6 +8,7 @@ import java.time.Instant
 data class CraftsmanSetupResponse(
     val craftsmanId: String,
     val status: CraftsmanStatus,
+    val profilePictureUrl: String? = null,
     val message: String
 )
 
@@ -15,6 +16,7 @@ data class CraftsmanSetupResponse(
 data class CraftsmanProfileResponse(
     val craftsmanId: String,
     val personalInfo: PersonalInfo,
+    val profilePictureUrl: String? = null,
     val categories: List<String>,
     val status: CraftsmanStatus,
     val verificationInfo: VerificationInfo,
@@ -55,4 +57,10 @@ data class WorkPortfolioUploadResponse(
     val workImageUrls: List<String>,
     val message: String,
     val totalImages: Int
+)
+
+data class ProfilePictureUploadResponse(
+    val craftsmanId: String,
+    val profilePictureUrl: String,
+    val message: String
 )

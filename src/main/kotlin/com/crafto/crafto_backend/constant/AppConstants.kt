@@ -20,6 +20,7 @@ object AppConstants {
         const val PROFILE_PICTURES = "profile-pictures"
         const val CATEGORY_ICONS = "category-icons"
 
+        fun craftsmanProfilePicture(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$PROFILE_PICTURES"
         fun craftsmanIdCards(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$ID_CARDS"
         fun craftsmanWorkPortfolio(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$WORK_PORTFOLIO"
     }

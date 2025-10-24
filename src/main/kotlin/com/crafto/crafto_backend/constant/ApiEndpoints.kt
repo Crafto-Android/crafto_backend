@@ -13,6 +13,7 @@ object ApiEndpoints {
         const val SETUP = "/setup"
         const val PROFILE = "/profile"
         const val STATUS = "/{craftsmanId}/status"
+        const val PROFILE_PICTURE = "/{craftsmanId}/profile-picture"
         const val DELETE_ACCOUNT = "/{craftsmanId}/delete"
 
         // Verification endpoints
