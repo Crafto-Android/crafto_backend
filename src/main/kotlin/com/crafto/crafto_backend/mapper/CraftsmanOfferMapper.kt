@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.mapper
 
 import com.crafto.crafto_backend.entity.CraftsmanOffer
-import com.crafto.crafto_backend.request.CraftsmanOfferRequest
+import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
 import com.crafto.crafto_backend.response.CraftsmanOfferResponse
 import java.time.Instant
 

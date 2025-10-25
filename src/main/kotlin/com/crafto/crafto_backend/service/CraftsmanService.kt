@@ -5,7 +5,7 @@ import com.crafto.crafto_backend.mapper.toEntity
 import com.crafto.crafto_backend.mapper.toResponse
 import com.crafto.crafto_backend.repository.CraftsmanOfferRepository
 import com.crafto.crafto_backend.repository.CustomerIssueRepository
-import com.crafto.crafto_backend.request.CraftsmanOfferRequest
+import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
 import com.crafto.crafto_backend.response.CraftsmanOfferResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

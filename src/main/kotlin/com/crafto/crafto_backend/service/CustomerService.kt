@@ -10,11 +10,11 @@ import com.crafto.crafto_backend.repository.CategoryRepository
 import com.crafto.crafto_backend.repository.CraftsmanOfferRepository
 import com.crafto.crafto_backend.repository.CustomerIssueRepository
 import com.crafto.crafto_backend.repository.CustomerRepository
-import com.crafto.crafto_backend.request.CustomerIssueRequest
-import com.crafto.crafto_backend.request.CustomerRequest
+import com.crafto.crafto_backend.dto.CustomerIssueRequest
+import com.crafto.crafto_backend.dto.CustomerRequest
+import com.crafto.crafto_backend.dto.CustomerResponse
 import com.crafto.crafto_backend.response.CustomerIssueDetailsResponse
 import com.crafto.crafto_backend.response.CustomerIssueResponse
-import com.crafto.crafto_backend.response.CustomerResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile

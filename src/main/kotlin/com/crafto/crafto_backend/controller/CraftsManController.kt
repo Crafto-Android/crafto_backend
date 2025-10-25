@@ -1,6 +1,6 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.request.CraftsmanOfferRequest
+import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
 import com.crafto.crafto_backend.response.CraftsmanOfferResponse
 import com.crafto.crafto_backend.service.CraftsmanService
 import org.springframework.web.bind.annotation.GetMapping

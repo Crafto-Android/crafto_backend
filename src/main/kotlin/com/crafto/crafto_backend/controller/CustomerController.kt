@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.request.CustomerIssueRequest
-import com.crafto.crafto_backend.request.CustomerRequest
+import com.crafto.crafto_backend.dto.CustomerIssueRequest
+import com.crafto.crafto_backend.dto.CustomerRequest
 import com.crafto.crafto_backend.response.CustomerIssueResponse
 import com.crafto.crafto_backend.service.CustomerService
 import org.springframework.web.bind.annotation.GetMapping

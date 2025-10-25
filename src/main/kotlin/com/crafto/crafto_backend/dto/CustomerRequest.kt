@@ -1,4 +1,4 @@
-package com.crafto.crafto_backend.request
+package com.crafto.crafto_backend.dto
 
 data class CustomerRequest(
     val name: String,
