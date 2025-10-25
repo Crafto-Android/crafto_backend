@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
-// POST  http://localhost:8085/customer
-// POST  http://localhost:8085/customer/issue
+// POST http://localhost:8085/customer
+// POST http://localhost:8085/customer/issue
 // GET  http://localhost:8085/customer/issue/customer_id/{customerId}
 // GET  http://localhost:8085/customer/issue/details/customer_issue_id/{customerIssueId}
 // GET  http://localhost:8085/customer/issue/details/customer_id/{customerId}
+// POST http://localhost:8085/customer/issue/select_craftsman/{customerIssueId}
 
 @RestController
 @RequestMapping("/customer")
@@ -61,4 +62,8 @@ class CustomerController(private val customerService: CustomerService) {
     @GetMapping("/issue/details/customer_id/{customerId}")
     fun getCustomerIssueDetailsByCustomerId(@PathVariable customerId: String) =
         customerService.getCustomerIssuesDetailsByCustomerId(customerId)
+
+    @PostMapping("/issue/select_craftsman/{customerIssueId}")
+    fun selectCraftsman(@PathVariable customerIssueId: String, @RequestParam offerId: String,) =
+        customerService.selectCraftsManOffer(issueId = customerIssueId, offerId = offerId)
 }

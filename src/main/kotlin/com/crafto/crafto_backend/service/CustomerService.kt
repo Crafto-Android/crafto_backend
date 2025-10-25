@@ -86,6 +86,23 @@ class CustomerService(
             .map { getCustomerIssueDetails(it.toResponse()) }
     }
 
+    fun selectCraftsManOffer(issueId: String, offerId: String){
+        val customerIssue = customerIssueRepository
+            .findById(issueId)
+            .orElseThrow { IllegalArgumentException("issue not found") }
+
+        val offer = offerRepository
+            .findById(offerId)
+            .orElseThrow { IllegalArgumentException("offer not found") }
+
+        val updatedIssue = customerIssue.copy(status = CustomerIssueStatus.CRAFTSMAN_SELECTED)
+        customerIssueRepository.save(updatedIssue)
+
+        val updatedOffer = offer.copy(isSelected = true)
+        offerRepository.save(updatedOffer)
+
+    }
+
     private fun getCustomerIssueDetails(issue: CustomerIssueResponse): CustomerIssueDetailsResponse {
         val offers = offerRepository
             .findByCustomerIssueId(customerIssueId = issue.id)
