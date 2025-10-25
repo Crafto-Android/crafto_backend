@@ -40,8 +40,7 @@ class CustomerService(
     fun saveCustomerIssue(
         body: CustomerIssueRequest,
         photos: List<MultipartFile>
-    ): CustomerIssueResponse
-    {
+    ): CustomerIssueResponse {
         val customer = customerRepository
             .findById(body.customerId)
             .orElseThrow { IllegalArgumentException("customer not found") }
@@ -72,12 +71,22 @@ class CustomerService(
         return imageUrls
     }
 
-    fun getCustomerIssueDetails(customerIssueId: String): CustomerIssueDetailsResponse{
+    fun getCustomerIssueDetails(customerIssueId: String): CustomerIssueDetailsResponse {
         val issue = customerIssueRepository
             .findById(customerIssueId)
             .orElseThrow { IllegalArgumentException("customer issue not found") }
             .toResponse()
 
+        return getCustomerIssueDetails(issue)
+    }
+
+    fun getCustomerIssuesDetailsByCustomerId(customerId: String): List<CustomerIssueDetailsResponse> {
+        return customerIssueRepository
+            .findByCustomerId(customerId)
+            .map { getCustomerIssueDetails(it.toResponse()) }
+    }
+
+    private fun getCustomerIssueDetails(issue: CustomerIssueResponse): CustomerIssueDetailsResponse {
         val offers = offerRepository
             .findByCustomerIssueId(customerIssueId = issue.id)
             .map { it.toResponse() }

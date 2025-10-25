@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/crafts_man")
-class CraftsManController(
-    private val service: CraftsmanService,
-    )
+class CraftsManController(private val service: CraftsmanService)
 {
     @PostMapping("/offer")
     fun saveCraftsmanOffer(@RequestBody body: CraftsmanOfferRequest): CraftsmanOfferResponse =
