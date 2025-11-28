@@ -5,6 +5,8 @@ import com.crafto.crafto_backend.database.entity.*
 import com.crafto.crafto_backend.database.repository.CraftsmanRepository
 import com.crafto.crafto_backend.dto.*
 import com.crafto.crafto_backend.exception.*
+import com.crafto.crafto_backend.utils.getFileExtension
+import com.crafto.crafto_backend.utils.validateImageFile
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -235,24 +237,6 @@ class CraftsmanService(
         return craftsman
     }
 
-    private fun validateImageFile(file: MultipartFile, fileType: String) {
-        if (file.isEmpty) {
-            throw BadRequestException("Empty file uploaded")
-        }
-
-        if (!AppConstants.FileUpload.ALLOWED_IMAGE_TYPES.contains(file.contentType)) {
-            throw BadRequestException(
-                "$fileType must be ${AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS.joinToString()} format"
-            )
-        }
-
-        if (file.size > AppConstants.FileUpload.MAX_FILE_SIZE_BYTES) {
-            throw BadRequestException(
-                "$fileType exceeds ${AppConstants.FileUpload.MAX_FILE_SIZE_MB} MB limit"
-            )
-        }
-    }
-
     private fun validateImageFiles(
         files: List<MultipartFile>,
         fileType: String = "Image",
@@ -293,22 +277,6 @@ class CraftsmanService(
             verification.idCardFront == null || verification.idCardBack == null -> VerificationStatus.NOT_SUBMITTED
             verification.workVerificationImages.isEmpty() -> VerificationStatus.NOT_SUBMITTED
             else -> VerificationStatus.PENDING
-        }
-    }
-
-    private fun getFileExtension(file: MultipartFile): String {
-        val filename = file.originalFilename ?: return "jpg"
-
-        return if (filename.contains('.')) {
-            val extension = filename.substringAfterLast('.').lowercase()
-            // Validate it's an allowed extension
-            if (AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS.contains(extension)) {
-                extension
-            } else {
-                "jpg"
-            }
-        } else {
-            "jpg"
         }
     }
 }

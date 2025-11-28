@@ -24,6 +24,13 @@ object ApiEndpoints {
         }
     }
 
-    // TODO:Customer endpoints
+    object Customer {
+        const val BASE = "/customer"
+        const val BY_ID = "/{customerId}"
+        const val SETUP = "/setup"
+        const val PROFILE = "/profile"
+        const val PROFILE_PHOTO = "/{customerId}/profile-photo"
+        const val DELETE_ACCOUNT = "/{customerId}/delete"
+    }
 
 }

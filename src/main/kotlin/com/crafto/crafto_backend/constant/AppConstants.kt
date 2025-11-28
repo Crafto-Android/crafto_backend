@@ -15,12 +15,14 @@ object AppConstants {
     // Firebase storage paths
     object StoragePaths {
         const val CRAFTSMEN = "craftsmen"
+        const val CUSTOMERS = "customers"
         const val ID_CARDS = "id-cards"
         const val WORK_PORTFOLIO = "work-portfolio"
         const val PROFILE_PICTURES = "profile-pictures"
         const val CATEGORY_ICONS = "category-icons"
 
         fun craftsmanProfilePicture(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$PROFILE_PICTURES"
+        fun customerProfilePicture(customerId: String) = "$CUSTOMERS/$customerId/$PROFILE_PICTURES"
         fun craftsmanIdCards(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$ID_CARDS"
         fun craftsmanWorkPortfolio(craftsmanId: String) = "$CRAFTSMEN/$craftsmanId/$WORK_PORTFOLIO"
     }
@@ -32,6 +34,8 @@ object AppConstants {
         const val MAX_CATEGORIES = 5
         const val MIN_WORK_IMAGES = 1
         const val MAX_WORK_IMAGES = 4
+        const val MIN_NAME_LENGTH = 2
+        const val MAX_NAME_LENGTH = 100
     }
 
     // Default values

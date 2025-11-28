@@ -27,9 +27,9 @@ data class PersonalInfo(
 )
 
 data class Verification(
-    val idCardFront: String?, // URL/path to image
-    val idCardBack: String?, // URL/path to image
-    val workVerificationImages: List<String> = emptyList(), // URLs/paths to images
+    val idCardFront: String?,
+    val idCardBack: String?,
+    val workVerificationImages: List<String> = emptyList(),
     val verificationStatus: VerificationStatus = VerificationStatus.NOT_SUBMITTED,
     val verifiedAt: Instant? = null,
     val rejectionReason: String? = null

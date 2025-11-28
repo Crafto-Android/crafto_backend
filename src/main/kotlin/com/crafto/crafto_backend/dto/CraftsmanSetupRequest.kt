@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty
 
 data class CraftsmanSetupRequest(
     @field:Valid
-    val personalInfo: PersonalInfoDto,
+    val personalInfo: CraftsmanPersonalInfoDto,
     @field:NotEmpty(message = "At least one category must be selected")
     val categories: List<String>
 )
