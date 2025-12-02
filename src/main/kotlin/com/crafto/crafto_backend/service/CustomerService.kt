@@ -20,11 +20,6 @@ class CustomerService(
     private val customerRepository: CustomerRepository,
     private val firebaseStorageService: FirebaseStorageService
 ) {
-//    fun saveCustomer(body: CustomerRequest): CustomerSetupResponse {
-//        val customer = customerRepository.save(body.toEntity())
-//        return customer.toResponse()
-//    }
-
     @Transactional
     fun createCustomer(
         userId: String,
@@ -121,7 +116,4 @@ class CustomerService(
 
         return customer
     }
-
-
-
 }
