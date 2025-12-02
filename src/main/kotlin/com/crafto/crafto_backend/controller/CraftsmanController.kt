@@ -102,7 +102,7 @@ class CraftsmanController(
 
         return ResponseEntity.ok(
             ProfilePictureUploadResponse(
-                craftsmanId = updatedCraftsman.id!!.toHexString(),
+                id = updatedCraftsman.id!!.toHexString(),
                 profilePictureUrl = updatedCraftsman.profilePictureUrl!!,
                 message = "Profile picture uploaded successfully"
             )

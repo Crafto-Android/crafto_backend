@@ -50,16 +50,16 @@ class CustomerService(
     }
 
     @Transactional
-    fun uploadProfilePhoto(
+    fun uploadProfilePicture(
         customerId: String,
         userId: String,
-        profilePhoto: MultipartFile
+        profilePicture: MultipartFile
     ): Customer {
 
         val customer = validateCustomerOwnership(customerId, userId)
 
         // Validate file
-        validateImageFile(profilePhoto, "Profile photo")
+        validateImageFile(profilePicture, "Profile picture")
 
         // Delete old photo if exists
         customer.profilePhoto?.let { oldUrl ->
@@ -67,15 +67,15 @@ class CustomerService(
         }
 
         // Upload new photo
-        val profilePhotoUrl = firebaseStorageService.uploadFile(
-            file = profilePhoto,
+        val profilePictureUrl = firebaseStorageService.uploadFile(
+            file = profilePicture,
             folder = AppConstants.StoragePaths.customerProfilePicture(customerId),
-            fileName = "profile-${System.currentTimeMillis()}.${getFileExtension(profilePhoto)}"
+            fileName = "profile-${System.currentTimeMillis()}.${getFileExtension(profilePicture)}"
         )
 
         // Update customer
         val updatedCustomer = customer.copy(
-            profilePhoto = profilePhotoUrl,
+            profilePhoto = profilePictureUrl,
             updatedAt = Instant.now()
         )
 

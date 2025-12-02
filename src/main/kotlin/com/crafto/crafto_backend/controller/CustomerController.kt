@@ -3,10 +3,10 @@ package com.crafto.crafto_backend.controller
 import com.crafto.crafto_backend.constant.ApiEndpoints
 import com.crafto.crafto_backend.dto.CustomerLocationDto
 import com.crafto.crafto_backend.dto.CustomerPersonalInfoDto
-import com.crafto.crafto_backend.dto.CustomerProfilePictureUploadResponse
 import com.crafto.crafto_backend.dto.CustomerProfileResponse
 import com.crafto.crafto_backend.dto.CustomerSetupRequest
 import com.crafto.crafto_backend.dto.CustomerSetupResponse
+import com.crafto.crafto_backend.dto.ProfilePictureUploadResponse
 import com.crafto.crafto_backend.service.CustomerService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -33,10 +33,6 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping(ApiEndpoints.Customer.BASE)
 class CustomerController(private val customerService: CustomerService) {
 
-//    @PostMapping
-//    fun getCustomerById(@RequestBody body: CustomerRequest) = customerService.saveCustomer(body = body)
-
-
     @PostMapping(ApiEndpoints.Customer.SETUP)
     fun setupCustomerProfile(
         @Valid @RequestBody setupRequest: CustomerSetupRequest,
@@ -57,23 +53,23 @@ class CustomerController(private val customerService: CustomerService) {
         ApiEndpoints.Customer.PROFILE_PHOTO,
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
     )
-    fun uploadProfilePhoto(
+    fun uploadProfilePicture(
         @PathVariable customerId: String,
-        @RequestParam("profilePhoto") profilePhoto: MultipartFile,
+        @RequestParam("profilePicture") profilePicture: MultipartFile,
         @RequestHeader("userId") userId: String
-    ): ResponseEntity<CustomerProfilePictureUploadResponse> {
+    ): ResponseEntity<ProfilePictureUploadResponse> {
 
-        val updatedCustomer = customerService.uploadProfilePhoto(
+        val updatedCustomer = customerService.uploadProfilePicture(
             customerId = customerId,
             userId = userId,
-            profilePhoto = profilePhoto
+            profilePicture = profilePicture
         )
 
         return ResponseEntity.ok(
-            CustomerProfilePictureUploadResponse(
-                customerId = updatedCustomer.id!!.toHexString(),
-                profilePhotoUrl = updatedCustomer.profilePhoto!!,
-                message = "Profile photo uploaded successfully"
+            ProfilePictureUploadResponse(
+                id = updatedCustomer.id!!.toHexString(),
+                profilePictureUrl = updatedCustomer.profilePhoto!!,
+                message = "Profile picture uploaded successfully"
             )
         )
     }
@@ -94,7 +90,7 @@ class CustomerController(private val customerService: CustomerService) {
                     name = customer.personalInfo.name,
                     phoneNumber = customer.personalInfo.phoneNumber
                 ),
-                profilePhoto = customer.profilePhoto,
+                profilePictureUrl = customer.profilePhoto,
                 location = CustomerLocationDto(
                     governorate = customer.location.governorate,
                     district = customer.location.district,
@@ -122,7 +118,7 @@ class CustomerController(private val customerService: CustomerService) {
                     name = customer.personalInfo.name,
                     phoneNumber = customer.personalInfo.phoneNumber
                 ),
-                profilePhoto = customer.profilePhoto,
+                profilePictureUrl = customer.profilePhoto,
                 location = CustomerLocationDto(
                     governorate = customer.location.governorate,
                     district = customer.location.district,

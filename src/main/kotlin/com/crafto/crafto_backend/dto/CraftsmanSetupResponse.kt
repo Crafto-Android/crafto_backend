@@ -59,8 +59,3 @@ data class WorkPortfolioUploadResponse(
     val totalImages: Int
 )
 
-data class ProfilePictureUploadResponse(
-    val craftsmanId: String,
-    val profilePictureUrl: String,
-    val message: String
-)
