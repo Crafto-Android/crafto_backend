@@ -1,6 +1,7 @@
 package com.crafto.crafto_backend.dto
 
 data class CustomerResponse (
+    val id: String,
     val name: String,
     val profilePhoto: String? = null,
     val governorate: String,
