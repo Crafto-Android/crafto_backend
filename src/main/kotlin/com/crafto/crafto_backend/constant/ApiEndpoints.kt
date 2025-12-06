@@ -29,7 +29,7 @@ object ApiEndpoints {
         const val BY_ID = "/{customerId}"
         const val SETUP = "/setup"
         const val PROFILE = "/profile"
-        const val PROFILE_PHOTO = "/{customerId}/profile-photo"
+        const val PROFILE_PICTURE = "/{customerId}/profile-picture"
         const val DELETE_ACCOUNT = "/{customerId}/delete"
     }
 

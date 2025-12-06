@@ -37,7 +37,7 @@ class CustomerService(
                 name = setupRequest.personalInfo.name,
                 phoneNumber = setupRequest.personalInfo.phoneNumber
             ),
-            profilePhoto = null,
+            profilePictureUrl = null,
             location = com.crafto.crafto_backend.database.entity.CustomerLocation(
                 governorate = setupRequest.location.governorate,
                 district = setupRequest.location.district,
@@ -62,7 +62,7 @@ class CustomerService(
         validateImageFile(profilePicture, "Profile picture")
 
         // Delete old photo if exists
-        customer.profilePhoto?.let { oldUrl ->
+        customer.profilePictureUrl?.let { oldUrl ->
             firebaseStorageService.deleteFileByUrlAsync(oldUrl)
         }
 
@@ -75,7 +75,7 @@ class CustomerService(
 
         // Update customer
         val updatedCustomer = customer.copy(
-            profilePhoto = profilePictureUrl,
+            profilePictureUrl = profilePictureUrl,
             updatedAt = Instant.now()
         )
 
@@ -87,7 +87,7 @@ class CustomerService(
         val customer = validateCustomerOwnership(customerId, userId)
 
         // Delete profile photo if exists
-        customer.profilePhoto?.let { url ->
+        customer.profilePictureUrl?.let { url ->
             firebaseStorageService.deleteFileByUrl(url)
         }
 

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 // POST http://localhost:8085/customer/setup
-// POST http://localhost:8085/customer/{customerId}/profile-photo
+// POST http://localhost:8085/customer/{customerId}/profile-picture
 // PATCH http://localhost:8085/customer/{customerId}
 // GET http://localhost:8085/customer/profile
 // GET http://localhost:8085/customer/{customerId}
@@ -50,7 +50,7 @@ class CustomerController(private val customerService: CustomerService) {
     }
 
     @PostMapping(
-        ApiEndpoints.Customer.PROFILE_PHOTO,
+        ApiEndpoints.Customer.PROFILE_PICTURE,
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
     )
     fun uploadProfilePicture(
@@ -68,7 +68,7 @@ class CustomerController(private val customerService: CustomerService) {
         return ResponseEntity.ok(
             ProfilePictureUploadResponse(
                 id = updatedCustomer.id!!.toHexString(),
-                profilePictureUrl = updatedCustomer.profilePhoto!!,
+                profilePictureUrl = updatedCustomer.profilePictureUrl!!,
                 message = "Profile picture uploaded successfully"
             )
         )
@@ -90,7 +90,7 @@ class CustomerController(private val customerService: CustomerService) {
                     name = customer.personalInfo.name,
                     phoneNumber = customer.personalInfo.phoneNumber
                 ),
-                profilePictureUrl = customer.profilePhoto,
+                profilePictureUrl = customer.profilePictureUrl,
                 location = CustomerLocationDto(
                     governorate = customer.location.governorate,
                     district = customer.location.district,
@@ -118,7 +118,7 @@ class CustomerController(private val customerService: CustomerService) {
                     name = customer.personalInfo.name,
                     phoneNumber = customer.personalInfo.phoneNumber
                 ),
-                profilePictureUrl = customer.profilePhoto,
+                profilePictureUrl = customer.profilePictureUrl,
                 location = CustomerLocationDto(
                     governorate = customer.location.governorate,
                     district = customer.location.district,

@@ -11,7 +11,7 @@ data class Customer (
     val id: ObjectId? = null,
     val userId: String,
     val personalInfo: CustomerPersonalInfo,
-    val profilePhoto: String? = null,
+    val profilePictureUrl: String? = null,
     val location: CustomerLocation,
     val categories: List<String>,
     val createdAt: Instant = Instant.now(),
