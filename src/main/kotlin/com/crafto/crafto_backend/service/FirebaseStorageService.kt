@@ -4,9 +4,11 @@ import com.google.cloud.storage.Acl
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Bucket
+import com.google.firebase.cloud.StorageClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.net.URI
@@ -17,8 +19,10 @@ import kotlin.text.contains
 import kotlin.text.substringAfter
 
 @Service
+@EnableConfigurationProperties(ImageStorageProperties::class)
 class FirebaseStorageService(
-    private val firebaseBucket: Bucket
+    private val storageClient: StorageClient,
+    private val props: ImageStorageProperties
 ) {
 
     private val deleteScope = CoroutineScope(Dispatchers.IO)
@@ -34,19 +38,19 @@ class FirebaseStorageService(
             val fullPath = "$folder/$actualFileName"
 
             // Create blob (file) in Firebase Storage
-            val blobId = BlobId.of(firebaseBucket.name, fullPath)
+            val blobId = BlobId.of(props.bucket, fullPath)
             val blobInfo = BlobInfo.newBuilder(blobId)
                 .setContentType(file.contentType ?: "application/octet-stream")
                 .build()
 
             // Upload the file
-            val blob = firebaseBucket.storage.create(blobInfo, file.bytes)
+            val blob = storageClient.bucket().storage.create(blobInfo, file.bytes)
 
             // Make the file publicly readable
             blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER))
 
             // Now this URL will work
-            return "https://storage.googleapis.com/${firebaseBucket.name}/$fullPath"
+            return "https://storage.googleapis.com/${props.bucket}/$fullPath"
 
         } catch (e: Exception) {
             println("Error uploading file: ${e.message}")
@@ -56,8 +60,8 @@ class FirebaseStorageService(
 
     fun deleteFile(filePath: String): Boolean {
         return try {
-            val blobId = BlobId.of(firebaseBucket.name, filePath)
-            val deleted = firebaseBucket.storage.delete(blobId)
+            val blobId = BlobId.of(props.bucket, filePath)
+            val deleted = storageClient.bucket().storage.delete(blobId)
             println("File deleted successfully: $filePath - Result: $deleted")
             deleted
         } catch (e: Exception) {
@@ -128,13 +132,13 @@ class FirebaseStorageService(
                     val path = uri.path ?: return null
 
                     // Ensure bucket name is in the path
-                    if (!path.contains(firebaseBucket.name)) {
+                    if (!path.contains(props.bucket)) {
                         println("URL doesn't match expected bucket: $fileUrl")
                         return null
                     }
 
                     // Remove bucket name from path
-                    path.substringAfter("/${firebaseBucket.name}/")
+                    path.substringAfter("/${props.bucket}/")
                 }
 
                 // Handle Firebase Storage URLs
