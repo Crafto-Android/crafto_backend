@@ -1,4 +1,4 @@
-package com.crafto.crafto_backend.entity
+package com.crafto.crafto_backend.database.entity
 
 enum class CustomerIssueStatus {
     SUBMITTED,

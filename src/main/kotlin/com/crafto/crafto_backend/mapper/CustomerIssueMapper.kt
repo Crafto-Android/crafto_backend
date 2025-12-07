@@ -1,12 +1,12 @@
 package com.crafto.crafto_backend.mapper
 
 import com.crafto.crafto_backend.dto.CategoryResponse
-import com.crafto.crafto_backend.entity.CustomerIssue
-import com.crafto.crafto_backend.entity.CustomerIssueStatus
+import com.crafto.crafto_backend.database.entity.CustomerIssue
+import com.crafto.crafto_backend.database.entity.CustomerIssueStatus
 import com.crafto.crafto_backend.dto.CustomerIssueRequest
-import com.crafto.crafto_backend.response.CraftsmanOfferResponse
-import com.crafto.crafto_backend.response.CustomerIssueDetailsResponse
-import com.crafto.crafto_backend.response.CustomerIssueResponse
+import com.crafto.crafto_backend.dto.CraftsmanOfferResponse
+import com.crafto.crafto_backend.dto.CustomerIssueDetailsResponse
+import com.crafto.crafto_backend.dto.CustomerIssueResponse
 
 fun CustomerIssueRequest.toEntity(imgs: List<String>, status: CustomerIssueStatus) = CustomerIssue(
     customerId = customerId,

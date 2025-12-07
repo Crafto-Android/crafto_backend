@@ -1,4 +1,4 @@
-package com.crafto.crafto_backend.security
+package com.crafto.crafto_backend.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

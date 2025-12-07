@@ -1,4 +1,4 @@
-package com.crafto.crafto_backend.response
+package com.crafto.crafto_backend.dto
 
 import java.time.Instant
 

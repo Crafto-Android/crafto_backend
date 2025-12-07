@@ -1,8 +1,8 @@
 package com.crafto.crafto_backend.mapper
 
-import com.crafto.crafto_backend.entity.CraftsmanOffer
+import com.crafto.crafto_backend.database.entity.CraftsmanOffer
 import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
-import com.crafto.crafto_backend.response.CraftsmanOfferResponse
+import com.crafto.crafto_backend.dto.CraftsmanOfferResponse
 import java.time.Instant
 
 fun CraftsmanOfferRequest.toEntity(isSelected: Boolean) = CraftsmanOffer(
