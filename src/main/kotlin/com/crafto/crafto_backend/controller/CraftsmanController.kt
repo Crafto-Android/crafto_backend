@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.controller
 
 import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
-import com.crafto.crafto_backend.response.CraftsmanOfferResponse
+import com.crafto.crafto_backend.dto.CraftsmanOfferResponse
 import com.crafto.crafto_backend.service.CraftsmanService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/crafts_man")
-class CraftsManController(private val service: CraftsmanService)
+class CraftsmanController(private val service: CraftsmanService)
 {
     @PostMapping("/offer")
     fun saveCraftsmanOffer(@RequestBody body: CraftsmanOfferRequest): CraftsmanOfferResponse =

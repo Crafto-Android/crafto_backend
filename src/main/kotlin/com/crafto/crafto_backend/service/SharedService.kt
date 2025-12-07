@@ -1,9 +1,9 @@
 package com.crafto.crafto_backend.service
 
 import com.crafto.crafto_backend.mapper.toCategoryResponse
-import com.crafto.crafto_backend.repository.CategoryRepository
+import com.crafto.crafto_backend.database.repository.CategoryRepository
 import com.crafto.crafto_backend.dto.CategoryResponse
-import com.crafto.crafto_backend.entity.Category
+import com.crafto.crafto_backend.database.entity.Category
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 import org.springframework.data.mongodb.core.MongoTemplate

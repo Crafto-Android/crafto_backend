@@ -1,12 +1,12 @@
 package com.crafto.crafto_backend.service
 
-import com.crafto.crafto_backend.entity.CustomerIssueStatus
+import com.crafto.crafto_backend.database.entity.CustomerIssueStatus
 import com.crafto.crafto_backend.mapper.toEntity
 import com.crafto.crafto_backend.mapper.toResponse
-import com.crafto.crafto_backend.repository.CraftsmanOfferRepository
-import com.crafto.crafto_backend.repository.CustomerIssueRepository
+import com.crafto.crafto_backend.database.repository.CraftsmanOfferRepository
+import com.crafto.crafto_backend.database.repository.CustomerIssueRepository
 import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
-import com.crafto.crafto_backend.response.CraftsmanOfferResponse
+import com.crafto.crafto_backend.dto.CraftsmanOfferResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

@@ -1,6 +1,6 @@
-package com.crafto.crafto_backend.repository
+package com.crafto.crafto_backend.database.repository
 
-import com.crafto.crafto_backend.entity.Authorization
+import com.crafto.crafto_backend.database.entity.Authorization
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.MongoRepository
 

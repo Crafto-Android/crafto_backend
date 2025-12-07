@@ -4,7 +4,7 @@ import com.crafto.crafto_backend.dto.AuthorizationRequest
 import com.crafto.crafto_backend.dto.AuthorizationResponse
 import com.crafto.crafto_backend.mapper.toAuthorizationEntity
 import com.crafto.crafto_backend.mapper.toAuthorizationResponse
-import com.crafto.crafto_backend.repository.AuthorizationRepository
+import com.crafto.crafto_backend.database.repository.AuthorizationRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
