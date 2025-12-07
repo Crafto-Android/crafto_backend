@@ -45,6 +45,10 @@ class CustomerService(
             .findById(body.customerId)
             .orElseThrow { IllegalArgumentException("customer not found") }
 
+        val category = categoryRepository
+            .findById(body.categoryId)
+            .orElseThrow { IllegalArgumentException("category not found") }
+
         val urls = uploadProductImages(customer, photos)
 
         val issue = customerIssueRepository.save(
@@ -53,6 +57,9 @@ class CustomerService(
                 status = CustomerIssueStatus.SUBMITTED
             )
         )
+
+        val updatedCategory = category.copy(popularity = category.popularity + 1)
+        categoryRepository.save(updatedCategory)
 
         return issue.toResponse()
     }
