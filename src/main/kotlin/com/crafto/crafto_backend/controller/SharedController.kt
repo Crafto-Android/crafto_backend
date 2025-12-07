@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.*
 class SharedController(private val service: SharedService) {
 
     @GetMapping("/categories")
-    fun getAllCategories(): List<CategoryResponse> {
-        return service.getAllCategories()
+    fun getAllCategories(
+        @RequestParam(name = "sorted", required = false) sorted: Boolean?
+    ): List<CategoryResponse> {
+        service.getAllCategories().let { categories ->
+            if (sorted == true) return  categories.sortedByDescending { it.popularity }
+            return categories
+        }
     }
 
     @GetMapping("/search")
-    fun search(@RequestParam query : String) : List<Category> = service.search(query)
+    fun search(@RequestParam query: String): List<Category> = service.search(query)
 }

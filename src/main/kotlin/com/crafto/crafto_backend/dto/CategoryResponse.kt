@@ -5,6 +5,6 @@ data class CategoryResponse(
     val categoryName:String,
     val categoryColor:String,
     val categoryIconUrl:String,
-    val categoryDescription:String
-
+    val categoryDescription:String,
+    val popularity: Int,
 )

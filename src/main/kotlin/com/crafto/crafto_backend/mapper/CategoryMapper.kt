@@ -9,6 +9,7 @@ fun Category.toCategoryResponse(): CategoryResponse {
         categoryColor = categoryColor,
         categoryName = categoryName,
         categoryDescription = categoryDescription,
-        categoryIconUrl = categoryIconUrl
+        categoryIconUrl = categoryIconUrl,
+        popularity = popularity
     )
 }

@@ -1,4 +1,5 @@
 package com.crafto.crafto_backend.entity
+
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
@@ -9,5 +10,6 @@ data class Category(
     val categoryName:String,
     val categoryColor:String,
     val categoryIconUrl:String,
-    val categoryDescription:String
+    val categoryDescription:String,
+    val popularity: Int = 0,
 )
