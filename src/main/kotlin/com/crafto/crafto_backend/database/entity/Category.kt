@@ -9,5 +9,6 @@ data class Category(
     val categoryName:String,
     val categoryColor:String,
     val categoryIconUrl:String,
-    val categoryDescription:String
+    val categoryDescription:String,
+    val popularity: Int = 0,
 )
