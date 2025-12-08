@@ -1,6 +1,6 @@
-package com.crafto.crafto_backend.repository
+package com.crafto.crafto_backend.database.repository
 
-import com.crafto.crafto_backend.entity.CraftsmanOffer
+import com.crafto.crafto_backend.database.entity.CraftsmanOffer
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface CraftsmanOfferRepository : MongoRepository<CraftsmanOffer, String>{

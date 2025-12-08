@@ -1,6 +1,6 @@
-package com.crafto.crafto_backend.response
+package com.crafto.crafto_backend.dto
 
-import com.crafto.crafto_backend.entity.CustomerIssueStatus
+import com.crafto.crafto_backend.database.entity.CustomerIssueStatus
 
 data class CustomerIssueResponse(
     val id: String,

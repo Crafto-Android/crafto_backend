@@ -1,6 +1,6 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.entity.OnboardingItem
+import com.crafto.crafto_backend.database.entity.OnboardingItem
 import com.crafto.crafto_backend.service.OnboardingService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
