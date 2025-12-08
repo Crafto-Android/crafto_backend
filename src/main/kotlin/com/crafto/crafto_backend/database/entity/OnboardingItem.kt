@@ -1,4 +1,4 @@
-package com.crafto.crafto_backend.entity
+package com.crafto.crafto_backend.database.entity
 
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.annotation.Id

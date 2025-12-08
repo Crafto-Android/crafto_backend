@@ -1,6 +1,6 @@
-package com.crafto.crafto_backend.repository
+package com.crafto.crafto_backend.database.repository
 
-import com.crafto.crafto_backend.entity.CustomerIssue
+import com.crafto.crafto_backend.database.entity.CustomerIssue
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface CustomerIssueRepository : MongoRepository<CustomerIssue, String>{

@@ -30,7 +30,13 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation(platform("software.amazon.awssdk:bom:2.33.8"))
     implementation("software.amazon.awssdk:s3")
-    implementation("com.google.firebase:firebase-admin:9.2.0")
+
+    implementation("com.google.firebase:firebase-admin:9.7.0")
+
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("jakarta.validation:jakarta.validation-api")
+
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.controller
 
 import com.crafto.crafto_backend.dto.CategoryResponse
-import com.crafto.crafto_backend.entity.Category
+import com.crafto.crafto_backend.database.entity.Category
 import com.crafto.crafto_backend.service.SharedService
 import org.springframework.web.bind.annotation.*
 

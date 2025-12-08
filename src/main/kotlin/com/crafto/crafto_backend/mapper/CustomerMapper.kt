@@ -1,24 +1,29 @@
 package com.crafto.crafto_backend.mapper
 
-import com.crafto.crafto_backend.entity.Customer
+import com.crafto.crafto_backend.database.entity.Customer
+import com.crafto.crafto_backend.database.entity.CustomerLocation
+import com.crafto.crafto_backend.database.entity.CustomerPersonalInfo
 import com.crafto.crafto_backend.dto.CustomerRequest
 import com.crafto.crafto_backend.dto.CustomerResponse
 
 fun Customer.toResponse() = CustomerResponse(
-    id = id ?: throw Exception("issue not fount"),
-    name = name,
-    profilePhoto = profilePhoto,
-    governorate = governorate,
-    district = district,
-    detailedLocation = detailedLocation,
+    id = id?.toHexString() ?: throw Exception("issue not fount"),
+    name = personalInfo.name,
+    profilePhoto = profilePictureUrl,
+    governorate = location.governorate,
+    district = location.district,
+    detailedLocation = location.detailedLocation,
     categories = categories
 )
 
 fun CustomerRequest.toEntity() = Customer(
-    name = name,
-    profilePhoto = profilePhoto,
-    governorate = governorate,
-    district = district,
-    detailedLocation = detailedLocation,
-    categories = categories
+    userId = "",
+    personalInfo = CustomerPersonalInfo(name,""),
+    location = CustomerLocation(
+        governorate = governorate,
+        district = district,
+        detailedLocation = detailedLocation
+    ),
+    profilePictureUrl = profilePhoto,
+    categories = categories,
 )
