@@ -1,5 +1,6 @@
-package com.crafto.crafto_backend.dto
+package com.crafto.crafto_backend.dto.request
 
+import com.crafto.crafto_backend.dto.CraftsmanPersonalInfoDto
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotEmpty
 

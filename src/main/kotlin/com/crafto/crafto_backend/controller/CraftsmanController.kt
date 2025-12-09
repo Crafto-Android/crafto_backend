@@ -2,16 +2,16 @@ package com.crafto.crafto_backend.controller
 
 import com.crafto.crafto_backend.constant.AppConstants.Validation.MAX_WORK_IMAGES
 import com.crafto.crafto_backend.constant.AppConstants.Validation.MIN_WORK_IMAGES
-import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
-import com.crafto.crafto_backend.dto.CraftsmanProfileResponse
-import com.crafto.crafto_backend.dto.CraftsmanSetupRequest
-import com.crafto.crafto_backend.dto.CraftsmanSetupResponse
-import com.crafto.crafto_backend.dto.CraftsmanStatusResponse
-import com.crafto.crafto_backend.dto.IdCardUploadResponse
-import com.crafto.crafto_backend.dto.ProfilePictureUploadResponse
-import com.crafto.crafto_backend.dto.VerificationInfo
-import com.crafto.crafto_backend.dto.WorkPortfolioUploadResponse
-import com.crafto.crafto_backend.dto.CraftsmanOfferResponse
+import com.crafto.crafto_backend.dto.request.CraftsmanOfferRequest
+import com.crafto.crafto_backend.dto.response.CraftsmanProfileResponse
+import com.crafto.crafto_backend.dto.request.CraftsmanSetupRequest
+import com.crafto.crafto_backend.dto.response.CraftsmanSetupResponse
+import com.crafto.crafto_backend.dto.response.CraftsmanStatusResponse
+import com.crafto.crafto_backend.dto.response.IdCardUploadResponse
+import com.crafto.crafto_backend.dto.response.ProfilePictureUploadResponse
+import com.crafto.crafto_backend.dto.response.VerificationInfo
+import com.crafto.crafto_backend.dto.response.WorkPortfolioUploadResponse
+import com.crafto.crafto_backend.dto.response.CraftsmanOfferResponse
 import com.crafto.crafto_backend.service.CraftsmanService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

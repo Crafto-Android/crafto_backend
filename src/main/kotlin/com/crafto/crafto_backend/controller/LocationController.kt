@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.dto.DistrictResponse
-import com.crafto.crafto_backend.dto.GovernorateResponse
+import com.crafto.crafto_backend.dto.response.DistrictResponse
+import com.crafto.crafto_backend.dto.response.GovernorateResponse
 import com.crafto.crafto_backend.service.LocationService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

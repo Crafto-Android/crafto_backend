@@ -1,15 +1,15 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.dto.CategoryResponse
+import com.crafto.crafto_backend.dto.response.CategoryResponse
 import com.crafto.crafto_backend.database.entity.Category
-import com.crafto.crafto_backend.service.SharedService
+import com.crafto.crafto_backend.service.CategoriesService
 import org.springframework.web.bind.annotation.*
 
 // GET  http://localhost:8085/categories
 // Get  http://localhost:8085/search
 
 @RestController
-class SharedController(private val service: SharedService) {
+class CategoriesController(private val service: CategoriesService) {
 
     @GetMapping("/categories")
     fun getAllCategories(

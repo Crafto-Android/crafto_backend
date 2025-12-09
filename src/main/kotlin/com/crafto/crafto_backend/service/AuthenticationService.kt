@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.service
 
-import com.crafto.crafto_backend.dto.AuthorizationRequest
-import com.crafto.crafto_backend.dto.AuthorizationResponse
+import com.crafto.crafto_backend.dto.request.AuthorizationRequest
+import com.crafto.crafto_backend.dto.response.AuthorizationResponse
 import com.crafto.crafto_backend.mapper.toAuthorizationEntity
 import com.crafto.crafto_backend.mapper.toAuthorizationResponse
 import com.crafto.crafto_backend.database.repository.AuthorizationRepository

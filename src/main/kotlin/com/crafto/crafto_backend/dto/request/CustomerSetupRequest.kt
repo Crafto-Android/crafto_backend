@@ -1,5 +1,7 @@
-package com.crafto.crafto_backend.dto
+package com.crafto.crafto_backend.dto.request
 
+import com.crafto.crafto_backend.dto.CustomerLocationDto
+import com.crafto.crafto_backend.dto.CustomerPersonalInfoDto
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
