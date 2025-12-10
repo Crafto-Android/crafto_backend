@@ -5,6 +5,7 @@ import com.crafto.crafto_backend.dto.response.AuthorizationResponse
 import com.crafto.crafto_backend.mapper.toAuthorizationEntity
 import com.crafto.crafto_backend.mapper.toAuthorizationResponse
 import com.crafto.crafto_backend.database.repository.AuthorizationRepository
+import com.crafto.crafto_backend.service.exception.UserNotFoundException
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service
 class AuthenticationService(private val authorizationRepository: AuthorizationRepository) {
 
     fun findByUserId(userId: String): AuthorizationResponse? {
-        val response = authorizationRepository.findById(ObjectId(userId)).orElse(null)
+     val response = authorizationRepository.findById(ObjectId(userId)).orElseThrow { UserNotFoundException() }
         return response.toAuthorizationResponse()
     }
 

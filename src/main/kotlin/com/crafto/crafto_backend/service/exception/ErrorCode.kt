@@ -10,6 +10,7 @@ object ErrorCode {
     // User
     const val USER_PHONE_NUMBER_ALREADY_EXIST = "USER_001"
     const val USER_NOT_FOUND = "USER_002"
+    const val USER_ALREADY_EXIST = "USER_003"
 
     // Phone number
     const val INVALID_PHONE_NUMBER = "PHONE_001"
@@ -18,6 +19,15 @@ object ErrorCode {
     // OTP
     const val OTP_EXPIRED = "OTP_001"
     const val OTP_INVALID = "OTP_002"
+
+    //Issues
+    const val ISSUE_NOT_FOUND = "ISSUE_001"
+
+    // Offer
+    const val OFFER_NOT_FOUND = "OFFER_001"
+
+    //Categories
+    const val CATEGORY_NOT_FOUND = "CATEGORY_001"
 
     //Image
     const val IMAGE_UPLOAD_FAILED = "IMAGE_001"

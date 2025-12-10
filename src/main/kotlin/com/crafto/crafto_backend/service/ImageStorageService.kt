@@ -1,5 +1,7 @@
 package com.crafto.crafto_backend.service
 
+import com.crafto.crafto_backend.service.exception.InvalidImageFormatException
+import com.crafto.crafto_backend.service.exception.UploadImageException
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Bucket
@@ -33,7 +35,7 @@ class ImageStorageService(
             file.contentType ?: throw IllegalArgumentException("Content type cannot be null")
 
         if (!allowedMimeTypes.containsKey(mimeType)) {
-            throw IllegalArgumentException("File type $mimeType is not allowed")
+            throw InvalidImageFormatException()
         }
         try {
             val extension = allowedMimeTypes[mimeType]!!
@@ -56,7 +58,7 @@ class ImageStorageService(
             return String.format(props.downloadUrl, props.bucket, storagePath)
 
         } catch (ex: Exception) {
-            throw RuntimeException("Failed to upload image to Firebase Storage", ex)
+            throw UploadImageException()
         }
     }
 
