@@ -1,4 +1,4 @@
-package com.crafto.crafto_backend.dto
+package com.crafto.crafto_backend.dto.request
 
 
 data class AuthorizationRequest(

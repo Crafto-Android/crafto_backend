@@ -2,8 +2,8 @@ package com.crafto.crafto_backend.service
 
 import com.crafto.crafto_backend.database.repository.DistrictRepository
 import com.crafto.crafto_backend.database.repository.GovernorateRepository
-import com.crafto.crafto_backend.dto.DistrictResponse
-import com.crafto.crafto_backend.dto.GovernorateResponse
+import com.crafto.crafto_backend.dto.response.DistrictResponse
+import com.crafto.crafto_backend.dto.response.GovernorateResponse
 import com.crafto.crafto_backend.mapper.toAreaResponse
 import com.crafto.crafto_backend.mapper.toGovernorateResponse
 import org.springframework.stereotype.Service

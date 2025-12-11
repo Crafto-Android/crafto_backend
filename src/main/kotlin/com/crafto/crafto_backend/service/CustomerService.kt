@@ -11,15 +11,13 @@ import com.crafto.crafto_backend.database.repository.CategoryRepository
 import com.crafto.crafto_backend.database.repository.CraftsmanOfferRepository
 import com.crafto.crafto_backend.database.repository.CustomerIssueRepository
 import com.crafto.crafto_backend.database.repository.CustomerRepository
-import com.crafto.crafto_backend.dto.CustomerIssueRequest
-import com.crafto.crafto_backend.dto.CustomerRequest
-import com.crafto.crafto_backend.dto.CustomerResponse
-import com.crafto.crafto_backend.dto.CustomerSetupRequest
-import com.crafto.crafto_backend.exception.ConflictException
-import com.crafto.crafto_backend.exception.ForbiddenException
-import com.crafto.crafto_backend.exception.NotFoundException
-import com.crafto.crafto_backend.dto.CustomerIssueDetailsResponse
-import com.crafto.crafto_backend.dto.CustomerIssueResponse
+import com.crafto.crafto_backend.dto.request.CustomerIssueRequest
+import com.crafto.crafto_backend.dto.request.CustomerRequest
+import com.crafto.crafto_backend.dto.response.CustomerResponse
+import com.crafto.crafto_backend.dto.request.CustomerSetupRequest
+import com.crafto.crafto_backend.dto.response.CustomerIssueDetailsResponse
+import com.crafto.crafto_backend.dto.response.CustomerIssueResponse
+import com.crafto.crafto_backend.service.exception.*
 import com.crafto.crafto_backend.utils.getFileExtension
 import com.crafto.crafto_backend.utils.validateImageFile
 import org.bson.types.ObjectId
@@ -50,7 +48,7 @@ class CustomerService(
 
         // Check if customer already exists
         customerRepository.findByUserId(userId)?.let {
-            throw ConflictException("Customer profile already exists for this user")
+            throw UserAlreadyExistException()
         }
 
         val customer = Customer(
@@ -82,11 +80,10 @@ class CustomerService(
     ): CustomerIssueResponse {
         val customer = customerRepository
             .findById(ObjectId(body.customerId))
-            .orElseThrow { IllegalArgumentException("customer not found") }
+            .orElseThrow { UserNotFoundException() }
 
         val category = categoryRepository
-            .findById(body.categoryId)
-            .orElseThrow { IllegalArgumentException("category not found") }
+            .findCategoriesById(body.categoryId)
 
         val urls = uploadProductImages(customer, photos)
 
@@ -120,7 +117,7 @@ class CustomerService(
     fun getCustomerIssueDetails(customerIssueId: String): CustomerIssueDetailsResponse {
         val issue = customerIssueRepository
             .findById(customerIssueId)
-            .orElseThrow { IllegalArgumentException("customer issue not found") }
+            .orElseThrow { UserIssueNotFound() }
             .toResponse()
 
         return getCustomerIssueDetails(issue)
@@ -132,14 +129,14 @@ class CustomerService(
             .map { getCustomerIssueDetails(it.toResponse()) }
     }
 
-    fun selectCraftsManOffer(issueId: String, offerId: String){
+    fun selectCraftsManOffer(issueId: String, offerId: String) {
         val customerIssue = customerIssueRepository
             .findById(issueId)
-            .orElseThrow { IllegalArgumentException("issue not found") }
+            .orElseThrow { UserIssueNotFound() }
 
         val offer = offerRepository
             .findById(offerId)
-            .orElseThrow { IllegalArgumentException("offer not found") }
+            .orElseThrow { UserOffersNotFound() }
 
         val updatedIssue = customerIssue.copy(status = CustomerIssueStatus.CRAFTSMAN_SELECTED)
         customerIssueRepository.save(updatedIssue)
@@ -155,8 +152,7 @@ class CustomerService(
             .map { it.toResponse() }
 
         val category = categoryRepository
-            .findById(issue.categoryId)
-            .orElseThrow { IllegalArgumentException("category not found") }
+            .findCategoriesById(issue.categoryId)
             .toCategoryResponse()
 
         return mapToCustomerIssueDetailsResponse(
@@ -220,16 +216,16 @@ class CustomerService(
 
     fun getCustomerByDatabaseId(customerId: String): Customer {
         return customerRepository.findById(ObjectId(customerId))
-            .orElseThrow { NotFoundException("Customer not found") }
+            .orElseThrow { UserNotFoundException() }
     }
 
     private fun validateCustomerOwnership(customerId: String, userId: String): Customer {
         val customer = customerRepository.findById(ObjectId(customerId))
-            .orElseThrow { NotFoundException("Customer not found") }
+            .orElseThrow { UserNotFoundException() }
 
-        if (customer.userId != userId) {
-            throw ForbiddenException("You don't have permission to modify this profile")
-        }
+//        if (customer.userId != userId) {
+//            throw ForbiddenException("You don't have permission to modify this profile") /////
+//        }
 
         return customer
     }

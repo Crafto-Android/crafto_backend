@@ -12,16 +12,16 @@ import com.crafto.crafto_backend.mapper.toResponse
 import com.crafto.crafto_backend.database.repository.CraftsmanOfferRepository
 import com.crafto.crafto_backend.database.repository.CraftsmanRepository
 import com.crafto.crafto_backend.database.repository.CustomerIssueRepository
-import com.crafto.crafto_backend.dto.CraftsmanOfferRequest
-import com.crafto.crafto_backend.dto.CraftsmanSetupRequest
-import com.crafto.crafto_backend.dto.CraftsmanStatusResponse
-import com.crafto.crafto_backend.exception.BadRequestException
-import com.crafto.crafto_backend.exception.ConflictException
-import com.crafto.crafto_backend.exception.ForbiddenException
-import com.crafto.crafto_backend.exception.NotFoundException
-import com.crafto.crafto_backend.dto.CraftsmanOfferResponse
+import com.crafto.crafto_backend.dto.request.CraftsmanOfferRequest
+import com.crafto.crafto_backend.dto.request.CraftsmanSetupRequest
+import com.crafto.crafto_backend.dto.response.CraftsmanStatusResponse
+import com.crafto.crafto_backend.dto.response.CraftsmanOfferResponse
+import com.crafto.crafto_backend.service.exception.UserAlreadyExistException
+import com.crafto.crafto_backend.service.exception.UserIssueNotFound
+import com.crafto.crafto_backend.service.exception.UserNotFoundException
 import com.crafto.crafto_backend.utils.getFileExtension
 import com.crafto.crafto_backend.utils.validateImageFile
+import org.apache.coyote.BadRequestException
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -40,7 +40,7 @@ class CraftsmanService(
     fun saveCraftsmanOffer(body: CraftsmanOfferRequest): CraftsmanOfferResponse {
 
         val customerIssue = customerIssueRepository.findById(body.customerIssueId)
-            .orElseThrow { IllegalArgumentException("Customer issue not found") }
+            .orElseThrow { UserIssueNotFound() }
 
         val updatedIssue = customerIssue.copy(status = CustomerIssueStatus.RECEIVING_OFFERS)
         customerIssueRepository.save(updatedIssue)
@@ -65,7 +65,7 @@ class CraftsmanService(
     ): Craftsman {
         // Check if craftsman already exists
         craftsmanRepository.findByUserId(userId)?.let {
-            throw ConflictException("Craftsman profile already exists for this user")
+            throw UserAlreadyExistException()
         }
 
         val craftsman = Craftsman(
@@ -245,7 +245,7 @@ class CraftsmanService(
         val craftsman = getCraftsmanByDatabaseId(craftsmanId)
 
         return CraftsmanStatusResponse(
-            craftsmanId = craftsman.id?.toHexString() ?: throw NotFoundException("Craftsman ID is null"),
+            craftsmanId = craftsman.id?.toHexString() ?: throw UserNotFoundException(),
             status = craftsman.status,
             verificationStatus = craftsman.verification.verificationStatus,
             message = when (craftsman.status) {
@@ -263,17 +263,17 @@ class CraftsmanService(
 
     fun getCraftsmanByDatabaseId(craftsmanId: String): Craftsman {
         return craftsmanRepository.findById(ObjectId(craftsmanId))
-            .orElseThrow { NotFoundException("Craftsman not found") }
+            .orElseThrow { UserNotFoundException() }
     }
 
 
     private fun validateCraftsmanOwnership(craftsmanId: String, userId: String): Craftsman {
         val craftsman = craftsmanRepository.findById(ObjectId(craftsmanId))
-            .orElseThrow { NotFoundException("Craftsman not found") }
+            .orElseThrow { UserNotFoundException() }
 
-        if (craftsman.userId != userId) {
-            throw ForbiddenException("You don't have permission to update this profile")
-        }
+//        if (craftsman.userId != userId) {
+//            throw ForbiddenException("You don't have permission to update this profile") //////
+//        }
 
         return craftsman
     }
@@ -285,7 +285,7 @@ class CraftsmanService(
     ) {
         files.forEach { file ->
             if (file.isEmpty) {
-                throw BadRequestException("Empty file uploaded")
+                throw BadRequestException("Empty file uploaded") //////
             }
 
             if (!AppConstants.FileUpload.ALLOWED_IMAGE_TYPES.contains(file.contentType)) {

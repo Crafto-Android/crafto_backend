@@ -3,8 +3,8 @@ package com.crafto.crafto_backend.mapper
 import com.crafto.crafto_backend.database.entity.Customer
 import com.crafto.crafto_backend.database.entity.CustomerLocation
 import com.crafto.crafto_backend.database.entity.CustomerPersonalInfo
-import com.crafto.crafto_backend.dto.CustomerRequest
-import com.crafto.crafto_backend.dto.CustomerResponse
+import com.crafto.crafto_backend.dto.request.CustomerRequest
+import com.crafto.crafto_backend.dto.response.CustomerResponse
 
 fun Customer.toResponse() = CustomerResponse(
     id = id?.toHexString() ?: throw Exception("issue not fount"),

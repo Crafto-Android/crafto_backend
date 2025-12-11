@@ -1,8 +1,9 @@
-package com.crafto.crafto_backend.dto
+package com.crafto.crafto_backend.dto.response
 
 import com.crafto.crafto_backend.database.entity.CraftsmanStatus
 import com.crafto.crafto_backend.database.entity.PersonalInfo
 import com.crafto.crafto_backend.database.entity.VerificationStatus
+import com.crafto.crafto_backend.dto.request.CraftsmanUploadedFilesRequest
 import java.time.Instant
 
 data class CraftsmanSetupResponse(

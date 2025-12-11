@@ -1,14 +1,14 @@
 package com.crafto.crafto_backend.controller
 
-import com.crafto.crafto_backend.dto.CustomerIssueRequest
+import com.crafto.crafto_backend.dto.request.CustomerIssueRequest
 import com.crafto.crafto_backend.dto.CustomerLocationDto
 import com.crafto.crafto_backend.dto.CustomerPersonalInfoDto
 import com.crafto.crafto_backend.dto.CustomerProfileResponse
-import com.crafto.crafto_backend.dto.CustomerRequest
-import com.crafto.crafto_backend.dto.CustomerSetupRequest
+import com.crafto.crafto_backend.dto.request.CustomerRequest
+import com.crafto.crafto_backend.dto.request.CustomerSetupRequest
 import com.crafto.crafto_backend.dto.CustomerSetupResponse
-import com.crafto.crafto_backend.dto.ProfilePictureUploadResponse
-import com.crafto.crafto_backend.dto.CustomerIssueResponse
+import com.crafto.crafto_backend.dto.response.ProfilePictureUploadResponse
+import com.crafto.crafto_backend.dto.response.CustomerIssueResponse
 import com.crafto.crafto_backend.service.CustomerService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

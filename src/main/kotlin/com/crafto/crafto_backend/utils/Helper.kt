@@ -1,7 +1,7 @@
 package com.crafto.crafto_backend.utils
 
 import com.crafto.crafto_backend.constant.AppConstants
-import com.crafto.crafto_backend.exception.BadRequestException
+import org.apache.coyote.BadRequestException
 import org.springframework.web.multipart.MultipartFile
 import kotlin.collections.contains
 import kotlin.collections.joinToString
