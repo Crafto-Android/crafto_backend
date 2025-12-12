@@ -31,7 +31,6 @@ class CustomerService(
     private val customerRepository: CustomerRepository,
     private val customerIssueRepository: CustomerIssueRepository,
     private val categoryRepository: CategoryRepository,
-    private val imageStorageService: ImageStorageService,
     private val offerRepository: CraftsmanOfferRepository,
     private val firebaseStorageService: FirebaseStorageService
 ) {
@@ -104,7 +103,7 @@ class CustomerService(
     fun uploadProductImages(customer: Customer, files: List<MultipartFile>): List<String> {
         val imageUrls = mutableListOf<String>()
         files.forEach { file ->
-            val imageUrl = imageStorageService.uploadImage(
+            val imageUrl = firebaseStorageService.uploadImage(
                 file = file,
                 fileName = "${customer.id}-${file.originalFilename}",
                 folderName = IMAGE_FOLDER_NAME
@@ -180,9 +179,9 @@ class CustomerService(
         }
 
         // Upload new photo
-        val profilePictureUrl = firebaseStorageService.uploadFile(
+        val profilePictureUrl = firebaseStorageService.uploadImage(
             file = profilePicture,
-            folder = AppConstants.StoragePaths.customerProfilePicture(customerId),
+            folderName = AppConstants.StoragePaths.customerProfilePicture(customerId),
             fileName = "profile-${System.currentTimeMillis()}.${getFileExtension(profilePicture)}"
         )
 

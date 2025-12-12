@@ -21,6 +21,7 @@ import com.crafto.crafto_backend.service.exception.UserIssueNotFound
 import com.crafto.crafto_backend.service.exception.UserNotFoundException
 import com.crafto.crafto_backend.utils.getFileExtension
 import com.crafto.crafto_backend.utils.validateImageFile
+import com.crafto.crafto_backend.utils.validateImageFiles
 import org.apache.coyote.BadRequestException
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
@@ -108,15 +109,15 @@ class CraftsmanService(
 
         try {
             // Upload new files
-            newIdFrontUrl = firebaseStorageService.uploadFile(
+            newIdFrontUrl = firebaseStorageService.uploadImage(
                 file = idCardFront,
-                folder = AppConstants.StoragePaths.craftsmanIdCards(craftsmanId),
+                folderName = AppConstants.StoragePaths.craftsmanIdCards(craftsmanId),
                 fileName = "id-front-${System.currentTimeMillis()}.${getFileExtension(idCardFront)}"
             )
 
-            newIdBackUrl = firebaseStorageService.uploadFile(
+            newIdBackUrl = firebaseStorageService.uploadImage(
                 file = idCardBack,
-                folder = AppConstants.StoragePaths.craftsmanIdCards(craftsmanId),
+                folderName = AppConstants.StoragePaths.craftsmanIdCards(craftsmanId),
                 fileName = "id-back-${System.currentTimeMillis()}.${getFileExtension(idCardBack)}"
             )
 
@@ -165,9 +166,9 @@ class CraftsmanService(
 
         // Upload new work images
         val workUrls = workImages.mapIndexed { index, file ->
-            firebaseStorageService.uploadFile(
+            firebaseStorageService.uploadImage(
                 file = file,
-                folder = AppConstants.StoragePaths.craftsmanWorkPortfolio(craftsmanId),
+                folderName = AppConstants.StoragePaths.craftsmanWorkPortfolio(craftsmanId),
                 fileName = "work-${System.currentTimeMillis()}-$index.${getFileExtension(file)}"
             )
         }
@@ -205,9 +206,9 @@ class CraftsmanService(
         }
 
         // Upload new profile picture
-        val profilePictureUrl = firebaseStorageService.uploadFile(
+        val profilePictureUrl = firebaseStorageService.uploadImage(
             file = profilePicture,
-            folder = AppConstants.StoragePaths.craftsmanProfilePicture(craftsmanId),
+            folderName = AppConstants.StoragePaths.craftsmanProfilePicture(craftsmanId),
             fileName = "profile-${System.currentTimeMillis()}.${getFileExtension(profilePicture)}"
         )
 
@@ -276,30 +277,6 @@ class CraftsmanService(
 //        }
 
         return craftsman
-    }
-
-    private fun validateImageFiles(
-        files: List<MultipartFile>,
-        fileType: String = "Image",
-        maxSizeBytes: Int = AppConstants.FileUpload.MAX_FILE_SIZE_BYTES
-    ) {
-        files.forEach { file ->
-            if (file.isEmpty) {
-                throw BadRequestException("Empty file uploaded") //////
-            }
-
-            if (!AppConstants.FileUpload.ALLOWED_IMAGE_TYPES.contains(file.contentType)) {
-                throw BadRequestException(
-                    "$fileType must be ${AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS} format"
-                )
-            }
-
-            if (file.size > maxSizeBytes) {
-                throw BadRequestException(
-                    "$fileType ${file.originalFilename} exceeds ${AppConstants.FileUpload.MAX_FILE_SIZE_MB} MB limit"
-                )
-            }
-        }
     }
 
     private fun validateWorkImages(files: List<MultipartFile>) {

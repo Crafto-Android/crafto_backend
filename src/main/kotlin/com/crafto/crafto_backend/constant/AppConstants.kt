@@ -4,11 +4,16 @@ object AppConstants {
 
     // File upload limits
     object FileUpload {
-        const val MAX_FILE_SIZE_MB = 4
+        const val MAX_FILE_SIZE_MB = 5
         const val MAX_REQUEST_SIZE_MB = 16
         const val MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
         const val MAX_REQUEST_SIZE_BYTES = MAX_REQUEST_SIZE_MB * 1024 * 1024
-        val ALLOWED_IMAGE_TYPES = listOf("image/jpeg", "image/png", "image/jpg")
+        val allowedMimeTypes = mapOf(
+                "image/jpeg" to "jpg",
+                "image/jpg" to "jpg",
+                "image/png" to "png",
+                "image/webp" to "webp",
+            )
         val ALLOWED_IMAGE_EXTENSIONS = listOf("jpg", "jpeg", "png")
     }
 

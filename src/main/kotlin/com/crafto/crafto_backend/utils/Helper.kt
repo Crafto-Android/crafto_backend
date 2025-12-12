@@ -25,20 +25,45 @@ fun getFileExtension(file: MultipartFile): String {
     }
 }
 
-fun validateImageFile(file: MultipartFile, fileType: String) {
+fun validateImageFile(file: MultipartFile, fileType: String,
+                      maxSizeBytes: Int = AppConstants.FileUpload.MAX_FILE_SIZE_BYTES) {
     if (file.isEmpty) {
         throw BadRequestException("Empty file uploaded")
     }
 
-    if (!AppConstants.FileUpload.ALLOWED_IMAGE_TYPES.contains(file.contentType)) {
+    if (!AppConstants.FileUpload.allowedMimeTypes.contains(file.contentType)) {
         throw BadRequestException(
             "$fileType must be ${AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS.joinToString()} format"
         )
     }
 
-    if (file.size > AppConstants.FileUpload.MAX_FILE_SIZE_BYTES) {
+    if (file.size > maxSizeBytes) {
         throw BadRequestException(
-            "$fileType exceeds ${AppConstants.FileUpload.MAX_FILE_SIZE_MB} MB limit"
+            "$fileType exceeds ${maxSizeBytes / 1024 / 1024} MB limit"
         )
+    }
+}
+
+fun validateImageFiles(
+    files: List<MultipartFile>,
+    fileType: String = "Image",
+    maxSizeBytes: Int = AppConstants.FileUpload.MAX_FILE_SIZE_BYTES
+) {
+    files.forEach { file ->
+        if (file.isEmpty) {
+            throw BadRequestException("Empty file uploaded")
+        }
+
+        if (!AppConstants.FileUpload.allowedMimeTypes.contains(file.contentType)) {
+            throw BadRequestException(
+                "$fileType must be ${AppConstants.FileUpload.ALLOWED_IMAGE_EXTENSIONS} format"
+            )
+        }
+
+        if (file.size > maxSizeBytes) {
+            throw BadRequestException(
+                "$fileType ${file.originalFilename} exceeds ${AppConstants.FileUpload.MAX_FILE_SIZE_MB} MB limit"
+            )
+        }
     }
 }
