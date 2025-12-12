@@ -43,7 +43,7 @@ class FirebaseConfiguration {
     }
 
     @Bean
-    fun firebaseStorage(): Bucket {
+    fun firebaseBucket(): Bucket {
         return StorageClient.getInstance().bucket()
     }
 }
